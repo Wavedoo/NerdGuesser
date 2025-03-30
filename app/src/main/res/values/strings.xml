@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">NerdGuesser</string>
+    <string name="back_arrow">Back arrow</string>
+    <string name="anime_number">Anime #%1$d</string>
+    <string name="help_button">Help button</string>
+    <string name="guess_the_anime">Guess the anime!</string>
+    <string name="skip">Skip</string>
+    <string name="submit">Submit</string>
+</resources>

@@ -21,7 +21,8 @@ enum class Status(val rgb: Long){
     NotGuessed(0xFF7D7D7D),
     Wrong(0xFFDC3D3D),
     Correct(0xFF3DDC85),
-    Close(0xFFCFCC53)
+    Close(0xFFCFCC53),
+    Disabled(0xFFD9D9D9)
 }
 
 
@@ -35,12 +36,18 @@ fun FrameButton(
         .height(50.dp),
     number: Int = 1,
     status: Status = Status.NotGuessed,
-    selected: Boolean = false
+    selected: Boolean = false,
+    onFrameChange:  (Int) -> Unit = {},
+    enabled: Boolean = false
 ){
     Button (
-        onClick = {},
-        colors = ButtonDefaults.buttonColors(containerColor = Color(status.rgb)),
+        onClick = {onFrameChange(number)},
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(status.rgb),
+            disabledContainerColor = Color(Status.Disabled.rgb)
+        ),
         shape = RoundedCornerShape(10.dp),
+        enabled = enabled,
         modifier = modifier
     ){
         val weight: FontWeight = if(selected) FontWeight.Bold else FontWeight.Normal

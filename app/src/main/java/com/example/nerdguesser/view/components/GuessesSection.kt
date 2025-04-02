@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 //TODO: Figure out if List<String> is the best
-//TODO: Add emote before guess 
+//TODO: Add emote before guess
 @Composable
 fun GuessesSection(guesses: List<String>){
     Column(

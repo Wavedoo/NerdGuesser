@@ -31,6 +31,8 @@ fun ResultsSection(correct: Boolean = true, answer: String = "Frieren: Beyond Jo
             GuessesButton(false)
             ShareButton()
         }
+        //TODO: add onClick = {showGuesses = !showGuesses}
+        //TODO: Continue reading this https://developer.android.com/develop/ui/compose/state-hoisting#business-logic
     }
 }
 

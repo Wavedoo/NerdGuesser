@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -19,6 +17,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,15 +34,19 @@ import com.example.nerdguesser.ui.theme.NerdGuesserTheme
 import com.example.nerdguesser.view.components.FrameBar
 import com.example.nerdguesser.view.components.GuessSection
 import com.example.nerdguesser.view.components.HintsSection
+import com.example.nerdguesser.view.components.ResultsSection
 
 private const val s = "Help button"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GuessAnimeScreen(){
-    var frame: Int = 4
+    var currentFrame: Int by remember { mutableIntStateOf(1) }
+    var remainingGuesses: Int by remember { mutableIntStateOf(6) }
+    var guess: String by remember { mutableStateOf("")}
     val hints = Hints()
-
+    //var guesses: List<String> by remember { mutableStateListOf<String>() }
+    val answer: String = "Frieren"
     NerdGuesserTheme{
         Scaffold(
             topBar = {
@@ -85,13 +93,35 @@ fun GuessAnimeScreen(){
                     painter = painterResource(R.drawable.frieren_landscape),
                     contentDescription = "Frieren"
                 )
-                FrameBar()
-                GuessSection()
-                HintsSection(hints, frame - 1)
+                FrameBar(currentFrame, remainingGuesses, onFrameChange = {currentFrame = it})
+                GuessSection(
+                    guess = guess,
+                    remainingGuesses = remainingGuesses,
+                    onTextChange = {guess = it},
+                    onSubmit = {
+                        if(guess.uppercase().trim() == answer.uppercase()){
+                            //Win
+
+                        }else{
+                            remainingGuesses -= 1
+                            guess = ""
+                            currentFrame = 7 - remainingGuesses
+                        }
+                    }
+                )
+                HintsSection(hints, 6 - remainingGuesses)
             }
         }
     }
 }
+
+fun checkGuess(guess: String){
+    val correct: String = "Frieren"
+    if(guess.uppercase() == correct.uppercase()){
+
+    }
+}
+
 
 @Preview
 @Composable

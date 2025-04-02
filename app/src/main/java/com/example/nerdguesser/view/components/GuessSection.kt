@@ -27,30 +27,35 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun GuessSection(){
-    var guess by remember { mutableStateOf("") }
+fun GuessSection(
+    remainingGuesses: Int = 6,
+    guess: String = "",
+    onTextChange: (String) -> Unit = {},
+    onSubmit: () -> Unit = {},
+){
+    //var guess by remember { mutableStateOf("") }
 
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         OutlinedTextField(
             value = guess,
-            onValueChange = { guess = it },
+            onValueChange = onTextChange,
             label = null,
             placeholder = { Text(stringResource(R.string.guess_the_anime)) },
             modifier =  Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         )
-        Text("6 guesses remaining!", Modifier.padding(vertical = 10.dp))
-        SubmitButton(guess)
+        Text(remainingGuesses.toString() + " guesses remaining!", Modifier.padding(vertical = 10.dp))
+        SubmitButton(guess, onSubmit)
 
     }
 }
 
 //TODO: Possibly move out of file
 @Composable
-fun SubmitButton(guess: String){
+fun SubmitButton(guess: String, onSubmit: () -> Unit = {}){
     Button(
-        onClick = {},
+        onClick = onSubmit,
         modifier = Modifier
             .height(40.dp)
             .width(100.dp),

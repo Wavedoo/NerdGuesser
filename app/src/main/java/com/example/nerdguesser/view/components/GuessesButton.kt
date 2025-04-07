@@ -9,21 +9,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.nerdguesser.R
 
 @Composable
-fun GuessesButton(guessesShown: Boolean = false){
-    val text: String = if(guessesShown)
+fun GuessesButton(
+    showGuesses: Boolean = false,
+    onClick: () -> Unit = {}
+){
+    val text: String = if(showGuesses)
         "Hide guesses"
     else
         "Show guesses"
 
     //TODO: Redo button formats and stuff
     Button(
-        onClick = {},
+        onClick = {onClick()},
         modifier = Modifier
             .height(40.dp)
             .width(140.dp),

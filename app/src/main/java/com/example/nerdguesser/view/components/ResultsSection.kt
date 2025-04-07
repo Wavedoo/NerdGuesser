@@ -16,7 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ResultsSection(correct: Boolean = true, answer: String = "Frieren: Beyond Journey's End"){
+fun ResultsSection(
+    correct: Boolean = true,
+    answer: String = "Frieren: Beyond Journey's End",
+    showGuesses: Boolean = false,
+    onGuessesClick: () -> Unit = {},
+    onShareClick: () -> Unit = {}
+){
     val resultColour: Color = if (correct) Color(0xFF3DDC85) else Color(0xFFDC3D3D)
     val resultMessage: String = if (correct) "You did it!" else "Womp womp"
     Column(
@@ -28,7 +34,7 @@ fun ResultsSection(correct: Boolean = true, answer: String = "Frieren: Beyond Jo
         Text(text = answer, color = resultColour, fontSize = 28.sp)
         Text(text = resultMessage, color = resultColour, fontSize = 28.sp, modifier = Modifier.padding(vertical = 10.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            GuessesButton(false)
+            GuessesButton(showGuesses = showGuesses, onClick = onGuessesClick)
             ShareButton()
         }
         //TODO: add onClick = {showGuesses = !showGuesses}

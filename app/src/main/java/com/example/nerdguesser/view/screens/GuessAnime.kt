@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -28,25 +29,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nerdguesser.R
 import com.example.nerdguesser.model.classes.Hints
 import com.example.nerdguesser.ui.theme.NerdGuesserTheme
 import com.example.nerdguesser.view.components.FrameBar
+import com.example.nerdguesser.view.components.GameOverSection
 import com.example.nerdguesser.view.components.GuessSection
 import com.example.nerdguesser.view.components.HintsSection
 import com.example.nerdguesser.view.components.ResultsSection
+import com.example.nerdguesser.viewmodel.GuessingGameViewModel
 
 private const val s = "Help button"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GuessAnimeScreen(){
+fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
+    val gameUiState by gameViewModel.uiState.collectAsState()
+
     var currentFrame: Int by remember { mutableIntStateOf(1) }
-    var remainingGuesses: Int by remember { mutableIntStateOf(6) }
-    var guess: String by remember { mutableStateOf("")}
-    val hints = Hints()
+    //var remainingGuesses: Int by remember { mutableIntStateOf(6) }
+    //var guess: String by remember { mutableStateOf("")}
+    //val hints = Hints()
     //var guesses: List<String> by remember { mutableStateListOf<String>() }
-    val answer: String = "Frieren"
+    //val answer: String = "Frieren"
     NerdGuesserTheme{
         Scaffold(
             topBar = {
@@ -93,35 +99,33 @@ fun GuessAnimeScreen(){
                     painter = painterResource(R.drawable.frieren_landscape),
                     contentDescription = "Frieren"
                 )
-                FrameBar(currentFrame, remainingGuesses, onFrameChange = {currentFrame = it})
-                GuessSection(
-                    guess = guess,
-                    remainingGuesses = remainingGuesses,
-                    onTextChange = {guess = it},
-                    onSubmit = {
-                        if(guess.uppercase().trim() == answer.uppercase()){
-                            //Win
+                //TODO: Card?
+                FrameBar(
+                    currentFrame = gameUiState.currentFrame,
+                    remainingGuesses = gameUiState.remainingGuesses,
+                    onFrameChange = {currentFrame = it})
 
-                        }else{
-                            remainingGuesses -= 1
-                            guess = ""
-                            currentFrame = 7 - remainingGuesses
-                        }
-                    }
-                )
-                HintsSection(hints, 6 - remainingGuesses)
+                if(gameUiState.isGameOver){
+                    GameOverSection(
+                        correct = gameUiState.isCorrect,
+                        /*answer = gameUiState.correctAnswer, */
+                        guesses = gameUiState.guesses,
+                        hints = gameUiState.hints
+                    )
+                }else{
+                    GuessSection(
+                        guess = gameViewModel.userGuess,
+                        remainingGuesses = gameUiState.remainingGuesses,
+                        onTextChange = {gameViewModel.updateGuess(it)},
+                        onSubmit = { gameViewModel.checkUserGuess() }
+                    )
+                }
+                HintsSection(gameUiState.hints, gameUiState.hintsShown)
+
             }
         }
     }
 }
-
-fun checkGuess(guess: String){
-    val correct: String = "Frieren"
-    if(guess.uppercase() == correct.uppercase()){
-
-    }
-}
-
 
 @Preview
 @Composable

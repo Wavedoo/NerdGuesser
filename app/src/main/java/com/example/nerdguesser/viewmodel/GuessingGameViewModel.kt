@@ -7,21 +7,28 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.example.nerdguesser.model.classes.AnswerData
+import com.example.nerdguesser.model.repositories.MockServer
 import kotlinx.coroutines.flow.update
 
 class GuessingGameViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(GuessingGameUiState())
     val uiState: StateFlow<GuessingGameUiState> = _uiState.asStateFlow()
 
+    private val server = MockServer()
+
     private lateinit var correctAnswer: String
+    private lateinit var answerData: AnswerData
 
     var userGuess by mutableStateOf("")
         private set
 
     //Mock functions
-    fun getAnswerDetails(){
-        correctAnswer = "Frieren"
-        _uiState.value = GuessingGameUiState(correctAnswer = correctAnswer)
+    private fun getAnswerDetails(){
+        //correctAnswer = "Frieren"
+        answerData = server.getGameData(1)
+        correctAnswer = answerData.name
+        _uiState.value = GuessingGameUiState(correctAnswer = correctAnswer, hints = answerData.hints, images = answerData.images)
     }
 
     //State functions
@@ -42,14 +49,17 @@ class GuessingGameViewModel: ViewModel() {
                 it.copy(isCorrect = true, isGameOver = true)
             }
         }else{
+            val frame = if(!gameOver) 8 - _uiState.value.remainingGuesses else _uiState.value.currentFrame
             _uiState.update {
                 it.copy(
                     remainingGuesses = it.remainingGuesses.dec(),
                     hintsShown = it.hintsShown.inc(),
-                    isGameOver = gameOver
+                    isGameOver = gameOver,
+                    currentFrame = frame
                 )
             }
         }
+
 
     }
 
@@ -74,6 +84,9 @@ class GuessingGameViewModel: ViewModel() {
         }
     }
 
+    fun updateFrame(frame: Int){
+        _uiState.update { it.copy(currentFrame = frame) }
+    }
     init {
         getAnswerDetails()
     }

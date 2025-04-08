@@ -20,8 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -31,13 +29,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nerdguesser.R
-import com.example.nerdguesser.model.classes.Hints
 import com.example.nerdguesser.ui.theme.NerdGuesserTheme
 import com.example.nerdguesser.view.components.FrameBar
 import com.example.nerdguesser.view.components.GameOverSection
 import com.example.nerdguesser.view.components.GuessSection
 import com.example.nerdguesser.view.components.HintsSection
-import com.example.nerdguesser.view.components.ResultsSection
 import com.example.nerdguesser.viewmodel.GuessingGameViewModel
 
 private const val s = "Help button"
@@ -96,15 +92,15 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
             ){
                 //Text("hi")
                 Image(
-                    painter = painterResource(R.drawable.frieren_landscape),
+                    painter = painterResource(gameUiState.images[gameUiState.currentFrame-1]),
                     contentDescription = "Frieren"
                 )
                 //TODO: Card?
                 FrameBar(
                     currentFrame = gameUiState.currentFrame,
                     remainingGuesses = gameUiState.remainingGuesses,
-                    onFrameChange = {currentFrame = it})
-
+                    onFrameChange = {gameViewModel.updateFrame(it)}
+                )
                 if(gameUiState.isGameOver){
                     GameOverSection(
                         correct = gameUiState.isCorrect,

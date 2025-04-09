@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,6 +46,8 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
     val gameUiState by gameViewModel.uiState.collectAsState()
 
     var currentFrame: Int by remember { mutableIntStateOf(1) }
+
+    val clipboardManager = LocalClipboardManager.current
     //var remainingGuesses: Int by remember { mutableIntStateOf(6) }
     //var guess: String by remember { mutableStateOf("")}
     //val hints = Hints()
@@ -111,7 +114,8 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
                         correct = gameUiState.isCorrect,
                         /*answer = gameUiState.correctAnswer, */
                         guesses = gameUiState.guesses,
-                        hints = gameUiState.hints
+                        hints = gameUiState.hints,
+                        onShareClick = {clipboardManager.setText(gameViewModel.shareResults("Anime"))}
                     )
                 }else{
                     GuessSection(

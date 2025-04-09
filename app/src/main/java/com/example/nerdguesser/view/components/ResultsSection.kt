@@ -37,7 +37,7 @@ fun ResultsSection(
         Text(text = resultMessage, color = resultColour, fontSize = 28.sp, modifier = Modifier.padding(vertical = 10.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             GuessesButton(showGuesses = showGuesses, onClick = onGuessesClick)
-            ShareButton()
+            ShareButton(onShareClick = onShareClick)
         }
         //TODO: add onClick = {showGuesses = !showGuesses}
         //TODO: Continue reading this https://developer.android.com/develop/ui/compose/state-hoisting#business-logic

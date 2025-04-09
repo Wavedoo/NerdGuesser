@@ -16,7 +16,7 @@ import com.example.nerdguesser.view.components.buttons.Status
 fun FrameBar(currentFrame: Int = 1, remainingGuesses: Int = 6, onFrameChange: (Int) -> Unit = {}) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         for(i: Int in 1..6){
-            val enabled = if (i <= 7 - remainingGuesses) true else false
+            val enabled = i <= 7 - remainingGuesses
             FrameButton(
                 number = i,
                 status = Status.NotGuessed,

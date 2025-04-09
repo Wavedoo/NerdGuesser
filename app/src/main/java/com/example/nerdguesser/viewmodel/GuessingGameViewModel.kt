@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.AnnotatedString
 import com.example.nerdguesser.model.classes.AnswerData
 import com.example.nerdguesser.model.repositories.MockServer
 import kotlinx.coroutines.flow.update
@@ -87,6 +88,20 @@ class GuessingGameViewModel: ViewModel() {
 
     fun updateFrame(frame: Int){
         _uiState.update { it.copy(currentFrame = frame, currentImage = it.images[frame-1]) }
+    }
+
+    fun shareResults(gameName: String): AnnotatedString {
+        var results = "NerdGuesser - $gameName #${_uiState.value.gameNumber}\n🤓"
+        val correctIndex = if (_uiState.value.isCorrect) _uiState.value.guesses.size - 1 else 6
+        for (i: Int in 0 until 6){
+            results += if (i < correctIndex)
+                "🟥 " /*Red square*/
+            else if (i == correctIndex)
+                "🟩 " /*Green square*/
+            else
+                "⬛ "
+        }
+        return AnnotatedString(results)
     }
     init {
         getAnswerDetails()

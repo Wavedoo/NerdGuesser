@@ -20,6 +20,7 @@ data class GuessingGameUiState(
     val currentImage: Int = R.drawable.frieren_village_1,
     val isCorrect: Boolean = false,
     val isGameOver: Boolean = false,
+    val gameNumber: Int = 1,
     val images: List<Int> = listOf<Int>(
         R.drawable.frieren_village_1,
         R.drawable.frieren_ring_2,

@@ -21,7 +21,7 @@ fun GameOverSection(
     answer: String = "Frieren: Beyond Journey's End",
     guesses: List<String> = listOf(),
     hints: Hints = Hints(),
-    /*showGuesses: Boolean = false*/
+    onShareClick: () -> Unit = {}
 ){
     var showGuesses by remember { mutableStateOf(false) }
     Column(
@@ -32,7 +32,8 @@ fun GameOverSection(
             correct = correct,
             answer = answer,
             showGuesses = showGuesses,
-            onGuessesClick = {showGuesses = !showGuesses}
+            onGuessesClick = {showGuesses = !showGuesses},
+            onShareClick = onShareClick
         )
         if(showGuesses){
             GuessesSection(guesses)

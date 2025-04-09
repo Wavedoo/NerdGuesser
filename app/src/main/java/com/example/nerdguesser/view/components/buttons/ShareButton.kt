@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ShareButton(){
+fun ShareButton(onShareClick: () -> Unit = {}){
     Button(
-        onClick = {},
+        onClick = onShareClick,
         modifier = Modifier
             .height(40.dp)
             .width(140.dp),

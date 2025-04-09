@@ -1,4 +1,4 @@
-package com.example.nerdguesser.view.components
+package com.example.nerdguesser.view.components.buttons
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height

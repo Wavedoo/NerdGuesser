@@ -17,7 +17,7 @@ data class GuessingGameUiState(
     val correctAnswer: String = "",
     val hints: Hints = Hints(),
     val currentFrame: Int = 1,
-    /*val currentImage: Int = R.drawable.frieren_village_1,*/
+    val currentImage: Int = R.drawable.frieren_village_1,
     val isCorrect: Boolean = false,
     val isGameOver: Boolean = false,
     val images: List<Int> = listOf<Int>(

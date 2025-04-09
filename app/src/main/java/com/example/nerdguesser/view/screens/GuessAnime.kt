@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nerdguesser.R
 import com.example.nerdguesser.ui.theme.NerdGuesserTheme
 import com.example.nerdguesser.view.components.FrameBar
+import com.example.nerdguesser.view.components.FrameImage
 import com.example.nerdguesser.view.components.GameOverSection
 import com.example.nerdguesser.view.components.GuessSection
 import com.example.nerdguesser.view.components.HintsSection
@@ -91,8 +92,12 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ){
                 //Text("hi")
-                Image(
-                    painter = painterResource(gameUiState.images[gameUiState.currentFrame-1]),
+
+                FrameImage(
+                    /*TODO: This is not UI logic so it should be moved.
+                    This is presentation logic.
+                     */
+                    imageId = gameUiState.currentImage,
                     contentDescription = "Frieren"
                 )
                 //TODO: Card?

@@ -46,16 +46,17 @@ class GuessingGameViewModel: ViewModel() {
         addGuess(correct)
         if (correct){
             _uiState.update {
-                it.copy(isCorrect = true, isGameOver = true)
+                it.copy(isCorrect = true, isGameOver = true, remainingGuesses = 0)
             }
         }else{
             val frame = if(!gameOver) 8 - _uiState.value.remainingGuesses else _uiState.value.currentFrame
+            updateFrame(frame)
             _uiState.update {
                 it.copy(
                     remainingGuesses = it.remainingGuesses.dec(),
                     hintsShown = it.hintsShown.inc(),
                     isGameOver = gameOver,
-                    currentFrame = frame
+                    /*currentFrame = frame*/
                 )
             }
         }
@@ -85,7 +86,7 @@ class GuessingGameViewModel: ViewModel() {
     }
 
     fun updateFrame(frame: Int){
-        _uiState.update { it.copy(currentFrame = frame) }
+        _uiState.update { it.copy(currentFrame = frame, currentImage = it.images[frame-1]) }
     }
     init {
         getAnswerDetails()

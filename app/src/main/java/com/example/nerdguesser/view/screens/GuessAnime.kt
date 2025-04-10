@@ -97,9 +97,6 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
                 //Text("hi")
 
                 FrameImage(
-                    /*TODO: This is not UI logic so it should be moved.
-                    This is presentation logic.
-                     */
                     imageId = gameUiState.currentImage,
                     contentDescription = "Frieren"
                 )

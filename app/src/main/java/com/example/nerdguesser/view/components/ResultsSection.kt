@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,7 +34,7 @@ fun ResultsSection(
         /*verticalArrangement = Arrangement.spacedBy(10.dp)*/
     ) {
         Text(text = "The answer is:", fontSize = 28.sp)
-        Text(text = answer, color = resultColour, fontSize = 28.sp)
+        Text(text = answer, color = resultColour, fontSize = 28.sp, textAlign = TextAlign.Center)
         Text(text = resultMessage, color = resultColour, fontSize = 28.sp, modifier = Modifier.padding(vertical = 10.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             GuessesButton(showGuesses = showGuesses, onClick = onGuessesClick)

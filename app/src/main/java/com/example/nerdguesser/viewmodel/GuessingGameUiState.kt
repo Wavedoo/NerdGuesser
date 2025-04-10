@@ -2,6 +2,7 @@ package com.example.nerdguesser.viewmodel
 
 import com.example.nerdguesser.R
 import com.example.nerdguesser.model.classes.Hints
+import com.example.nerdguesser.view.components.buttons.Status
 
 
 /*
@@ -14,6 +15,7 @@ data class GuessingGameUiState(
     val remainingGuesses: Int = 6,
     val hintsShown: Int = 0,
     val guesses: List<String> = listOf(),
+    val guessResults: MutableList<Status> = MutableList(6){Status.NotGuessed},
     val correctAnswer: String = "",
     val hints: Hints = Hints(),
     val currentFrame: Int = 1,

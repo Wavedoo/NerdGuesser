@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.AnnotatedString
 import com.example.nerdguesser.model.classes.AnswerData
 import com.example.nerdguesser.model.repositories.MockServer
+import com.example.nerdguesser.view.components.buttons.Status
 import kotlinx.coroutines.flow.update
 
 class GuessingGameViewModel: ViewModel() {
@@ -25,7 +26,7 @@ class GuessingGameViewModel: ViewModel() {
         private set
 
     //Mock functions
-    private fun getAnswerDetails(){
+    fun getAnswerDetails(){
         //correctAnswer = "Frieren"
         answerData = server.getGameData(1)
         correctAnswer = answerData.name
@@ -72,7 +73,6 @@ class GuessingGameViewModel: ViewModel() {
 
     }
     private fun addGuess(correct: Boolean){
-
         val listText = if (correct)
             "✅ $userGuess"
         else if(userGuess.isNotEmpty())
@@ -80,8 +80,13 @@ class GuessingGameViewModel: ViewModel() {
         else
             "❌ Skipped"
 
+        val frameStatus = if (correct) Status.Correct else Status.Wrong
         val newGuesses = _uiState.value.guesses + listText
         _uiState.update { it ->
+            println(frameStatus)
+            println("Before:\n ${it.guessResults} and ${it.currentFrame}")
+            it.guessResults[it.currentFrame-1] = frameStatus
+            println("Before:\n ${it.guessResults} and ${it.currentFrame}")
             it.copy(guesses = newGuesses)
         }
     }
@@ -90,6 +95,7 @@ class GuessingGameViewModel: ViewModel() {
         _uiState.update { it.copy(currentFrame = frame, currentImage = it.images[frame-1]) }
     }
 
+    //TODO: Change so it's proper share functionality and not just copying
     fun shareResults(gameName: String): AnnotatedString {
         var results = "NerdGuesser - $gameName #${_uiState.value.gameNumber}\n🤓"
         val correctIndex = if (_uiState.value.isCorrect) _uiState.value.guesses.size - 1 else 6

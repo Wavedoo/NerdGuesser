@@ -1,9 +1,10 @@
 package com.example.nerdguesser.view.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Search
@@ -24,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -71,7 +71,7 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
                     //TODO: Fix number thing
                     title = {Text(stringResource(R.string.anime_number, 1))},
                     navigationIcon = {
-                        IconButton(onClick = {}) {
+                        IconButton(onClick = {gameViewModel.getAnswerDetails()}) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                                 contentDescription = stringResource(R.string.back_arrow)
@@ -91,7 +91,7 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
         ) {
             innerPadding ->
             Column(
-                modifier = Modifier.padding(innerPadding),
+                modifier = Modifier.padding(innerPadding).verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ){
                 //Text("hi")
@@ -106,6 +106,7 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
                 //TODO: Card?
                 FrameBar(
                     currentFrame = gameUiState.currentFrame,
+                    frameStatuses = gameUiState.guessResults,
                     remainingGuesses = gameUiState.remainingGuesses,
                     onFrameChange = {gameViewModel.updateFrame(it)}
                 )
@@ -124,8 +125,8 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
                         onTextChange = {gameViewModel.updateGuess(it)},
                         onSubmit = { gameViewModel.checkUserGuess() }
                     )
+                    HintsSection(gameUiState.hints, gameUiState.hintsShown)
                 }
-                HintsSection(gameUiState.hints, gameUiState.hintsShown)
 
             }
         }

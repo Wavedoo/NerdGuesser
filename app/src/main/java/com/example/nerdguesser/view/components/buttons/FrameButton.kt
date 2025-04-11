@@ -2,9 +2,9 @@ package com.example.nerdguesser.view.components.buttons
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,20 +23,23 @@ enum class Status(val rgb: Long){
     Disabled(0xFFD9D9D9)
 }
 
+/*
+Probably not necessary, but my understanding is that extracting modifiers is good.
+https://developer.android.com/develop/ui/compose/modifiers#reusing-modifiers
+I'm only going to do it in this file as a reminder i suppose.
+*/
+private val frameButtonModifier: Modifier = Modifier.width(50.dp).height(50.dp)
 
 //TODO: Add functionality
+//Great job me you did it!
 
-@Preview
 @Composable
 fun FrameButton(
-    modifier: Modifier = Modifier
-        .width(50.dp)
-        .height(50.dp),
+    /*modifier: Modifier = Modifier,*/
     number: Int = 1,
     status: Status = Status.NotGuessed,
     selected: Boolean = false,
     onFrameChange:  (Int) -> Unit = {},
-    enabled: Boolean = false
 ){
     Button (
         onClick = {onFrameChange(number)},
@@ -44,9 +47,10 @@ fun FrameButton(
             containerColor = Color(status.rgb),
             disabledContainerColor = Color(Status.Disabled.rgb)
         ),
-        shape = RoundedCornerShape(10.dp),
-        enabled = enabled,
-        modifier = modifier
+        /*Possibly change to RoundedCornerShape(10.dp)*/
+        shape = MaterialTheme.shapes.small,
+        enabled = status != Status.Disabled,
+        modifier = frameButtonModifier
     ){
         val weight: FontWeight = if(selected) FontWeight.Bold else FontWeight.Normal
         Text(
@@ -56,4 +60,10 @@ fun FrameButton(
             fontWeight = weight
         )
     }
+}
+
+@Preview
+@Composable
+fun PreviewFrameButton(){
+    FrameButton(/*modifier = Modifier.fillMaxWidth()*/)
 }

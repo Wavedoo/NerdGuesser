@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.nerdguesser.view.components.buttons.SubmitButton
 
 @Composable
 fun GuessSection(
@@ -45,30 +46,11 @@ fun GuessSection(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         )
-        Text(remainingGuesses.toString() + " guesses remaining!", Modifier.padding(vertical = 10.dp))
+        Text(stringResource(R.string.guesses_remaining, remainingGuesses), Modifier.padding(vertical = 10.dp))
         SubmitButton(guess, onSubmit)
 
     }
 }
-
-//TODO: Possibly move out of file
-@Composable
-fun SubmitButton(guess: String, onSubmit: () -> Unit = {}){
-    Button(
-        onClick = onSubmit,
-        modifier = Modifier
-            .height(40.dp)
-            .width(100.dp),
-        shape = RoundedCornerShape(10.dp)
-    ) {
-        val text: String = if (guess.isNotEmpty())
-            stringResource(R.string.submit)
-        else
-            stringResource(R.string.skip)
-        Text(text)
-    }
-}
-
 
 @Preview
 @Composable

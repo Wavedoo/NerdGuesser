@@ -6,4 +6,18 @@
     <string name="guess_the_anime">Guess the anime!</string>
     <string name="skip">Skip</string>
     <string name="submit">Submit</string>
+    <string name="hide_guesses">Hide guesses</string>
+    <string name="show_guesses">Show guesses</string>
+    <string name="share_results">Share results</string>
+    <string name="hints">Hints</string>
+    <string name="hint_rating">"MyAnimeList rating: %1$s"</string>
+    <string name="hint_demographic">Demographic: %1$s</string>
+    <string name="hint_release_date">Release date: %1$s</string>
+    <string name="genres">Genres: %1$s</string>
+    <string name="studios">Studios: %1$s</string>
+    <string name="the_answer_is">The answer is:</string>
+    <string name="guesses_remaining">" %1$d guesses remaining!"</string>
+    <string name="guesses">Guesses</string>
+    <string name="result_correct">You did it!</string>
+    <string name="result_wrong">Womp womp</string>
 </resources>

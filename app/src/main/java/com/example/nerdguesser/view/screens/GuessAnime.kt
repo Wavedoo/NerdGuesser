@@ -44,16 +44,16 @@ private const val s = "Help button"
 @Composable
 fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
     val gameUiState by gameViewModel.uiState.collectAsState()
-
-    var currentFrame: Int by remember { mutableIntStateOf(1) }
-
     val clipboardManager = LocalClipboardManager.current
-    //var remainingGuesses: Int by remember { mutableIntStateOf(6) }
-    //var guess: String by remember { mutableStateOf("")}
-    //val hints = Hints()
-    //var guesses: List<String> by remember { mutableStateListOf<String>() }
-    //val answer: String = "Frieren"
-    NerdGuesserTheme{
+
+    //TODO: Add documentations and more comments?
+    //TODO: Refactor code, universal button, theming
+    //TODO: Extract modifiers?
+
+    //TODO: Find a good colour scheme and see if dynamic colour is good
+    //TODO: Proper theming colours, typography, shapes, etc
+    //TODO: ModalNavigationDrawer is probably good or i could just use home -> anime -> anime #1 and back buttons
+    NerdGuesserTheme(dynamicColor = false){
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -104,7 +104,6 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
                 FrameBar(
                     currentFrame = gameUiState.currentFrame,
                     frameStatuses = gameUiState.guessResults,
-                    remainingGuesses = gameUiState.remainingGuesses,
                     onFrameChange = {gameViewModel.updateFrame(it)}
                 )
                 if(gameUiState.isGameOver){

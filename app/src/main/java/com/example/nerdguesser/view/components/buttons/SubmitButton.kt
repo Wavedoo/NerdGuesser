@@ -2,6 +2,7 @@ package com.example.nerdguesser.view.components.buttons
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -11,13 +12,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.nerdguesser.R
 
+//Moved this out of GuessSection.kt
+
 @Composable
-fun ShareButton(onShareClick: () -> Unit = {}){
+fun SubmitButton(guess: String, onSubmit: () -> Unit = {}){
     Button(
-        onClick = onShareClick,
-        modifier = Modifier.height(40.dp).width(140.dp),
+        onClick = onSubmit,
+        modifier = Modifier.height(40.dp).width(100.dp),
         shape = MaterialTheme.shapes.small
     ) {
-        Text(stringResource(R.string.share_results))
+        val text: String = if (guess.isNotEmpty())
+            stringResource(R.string.submit)
+        else
+            stringResource(R.string.skip)
+        Text(text)
     }
 }

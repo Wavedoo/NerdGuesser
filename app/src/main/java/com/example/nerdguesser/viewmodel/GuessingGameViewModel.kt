@@ -43,13 +43,17 @@ class GuessingGameViewModel: ViewModel() {
     }
 
     fun checkUserGuess(){
-        val correct = userGuess.equals(correctAnswer, ignoreCase = true)
+        val correct = userGuess.trim().equals(correctAnswer, ignoreCase = true)
         val gameOver = _uiState.value.remainingGuesses == 1
+
         addGuess(correct)
+
         if (correct){
+            enableRemaining()
             _uiState.update {
                 it.copy(isCorrect = true, isGameOver = true, remainingGuesses = 0)
             }
+
         }else{
             val frame = if(!gameOver) 8 - _uiState.value.remainingGuesses else _uiState.value.currentFrame
             updateFrame(frame)
@@ -62,16 +66,9 @@ class GuessingGameViewModel: ViewModel() {
                 )
             }
         }
-
-
     }
 
-    fun correctAnswer(){
-
-    }
-    fun wrongAnswer() {
-
-    }
+    //TODO: Add a no redo thing
     private fun addGuess(correct: Boolean){
         val listText = if (correct)
             "✅ $userGuess"
@@ -83,10 +80,10 @@ class GuessingGameViewModel: ViewModel() {
         val frameStatus = if (correct) Status.Correct else Status.Wrong
         val newGuesses = _uiState.value.guesses + listText
         _uiState.update { it ->
-            println(frameStatus)
-            println("Before:\n ${it.guessResults} and ${it.currentFrame}")
             it.guessResults[it.currentFrame-1] = frameStatus
-            println("Before:\n ${it.guessResults} and ${it.currentFrame}")
+            if (it.currentFrame < 6) {
+                it.guessResults[it.currentFrame] = Status.NotGuessed
+            }
             it.copy(guesses = newGuesses)
         }
     }
@@ -97,7 +94,7 @@ class GuessingGameViewModel: ViewModel() {
 
     //TODO: Change so it's proper share functionality and not just copying
     fun shareResults(gameName: String): AnnotatedString {
-        var results = "NerdGuesser - $gameName #${_uiState.value.gameNumber}\n🤓"
+        var results = "NerdGuesser - $gameName #${_uiState.value.gameNumber}\n🤓 "
         val correctIndex = if (_uiState.value.isCorrect) _uiState.value.guesses.size - 1 else 6
         for (i: Int in 0 until 6){
             results += if (i < correctIndex)
@@ -109,6 +106,18 @@ class GuessingGameViewModel: ViewModel() {
         }
         return AnnotatedString(results)
     }
+
+    private fun enableRemaining(){
+        _uiState.update {
+            for ((i,status) in it.guessResults.withIndex()){
+                if(status == Status.Disabled){
+                    it.guessResults[i] = Status.NotGuessed
+                }
+            }
+            it.copy()
+        }
+    }
+
     init {
         getAnswerDetails()
     }

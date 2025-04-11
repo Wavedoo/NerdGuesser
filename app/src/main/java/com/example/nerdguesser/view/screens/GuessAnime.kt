@@ -36,6 +36,7 @@ import com.example.nerdguesser.view.components.FrameImage
 import com.example.nerdguesser.view.components.GameOverSection
 import com.example.nerdguesser.view.components.GuessSection
 import com.example.nerdguesser.view.components.HintsSection
+import com.example.nerdguesser.view.components.NerdGuesserScaffold
 import com.example.nerdguesser.viewmodel.GuessingGameViewModel
 
 private const val s = "Help button"
@@ -54,44 +55,15 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
     //TODO: Proper theming colours, typography, shapes, etc
     //TODO: ModalNavigationDrawer is probably good or i could just use home -> anime -> anime #1 and back buttons
     NerdGuesserTheme(dynamicColor = false){
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    colors = TopAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.inversePrimary,
-                        titleContentColor = MaterialTheme.colorScheme.onBackground,
-                        scrolledContainerColor = TopAppBarDefaults.topAppBarColors().scrolledContainerColor,
-                        navigationIconContentColor = TopAppBarDefaults.topAppBarColors().navigationIconContentColor,
-                        actionIconContentColor = TopAppBarDefaults.topAppBarColors().actionIconContentColor,
-                        /*
-                        TODO: Figure out why I don't need subtitle here
-                        subtitleContentColor = TopAppBarDefaults.topAppBarColors().sub
-                         */
-                    ),
-                    //TODO: Fix number thing
-                    title = {Text(stringResource(R.string.anime_number, 1))},
-                    navigationIcon = {
-                        IconButton(onClick = {gameViewModel.getAnswerDetails()}) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                                contentDescription = stringResource(R.string.back_arrow)
-                            )
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = {}) {
-                            Icon(
-                                imageVector = Icons.Rounded.Search,
-                                contentDescription = stringResource(R.string.help_button)
-                            )
-                        }
-                    }
-                )
-            }
+        NerdGuesserScaffold(
+            title = stringResource(R.string.anime_number, 1),
+            onBackClick = { gameViewModel.getAnswerDetails() }
         ) {
             innerPadding ->
             Column(
-                modifier = Modifier.padding(innerPadding).verticalScroll(rememberScrollState()),
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ){
                 //Text("hi")
@@ -109,7 +81,6 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
                 if(gameUiState.isGameOver){
                     GameOverSection(
                         correct = gameUiState.isCorrect,
-                        /*answer = gameUiState.correctAnswer, */
                         guesses = gameUiState.guesses,
                         hints = gameUiState.hints,
                         onShareClick = {clipboardManager.setText(gameViewModel.shareResults("Anime"))}

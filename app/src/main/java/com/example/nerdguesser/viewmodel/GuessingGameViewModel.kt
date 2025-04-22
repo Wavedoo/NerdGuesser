@@ -13,6 +13,7 @@ import com.example.nerdguesser.model.repositories.MockServer
 import com.example.nerdguesser.view.components.buttons.Status
 import kotlinx.coroutines.flow.update
 
+//TODO: Switch to hilt
 class GuessingGameViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(GuessingGameUiState())
     val uiState: StateFlow<GuessingGameUiState> = _uiState.asStateFlow()

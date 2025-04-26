@@ -43,7 +43,7 @@ private const val s = "Help button"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
+fun GuessAnimeScreen(id: String = "", gameViewModel: GuessingGameViewModel = viewModel()){
     val gameUiState by gameViewModel.uiState.collectAsState()
     val clipboardManager = LocalClipboardManager.current
 
@@ -60,9 +60,11 @@ fun GuessAnimeScreen(gameViewModel: GuessingGameViewModel = viewModel()){
     //TODO: https://firebase.google.com/codelabs/build-android-app-with-firebase-compose#0
     //https://www.reddit.com/r/Firebase/comments/k4lj94/connecting_firebase_emulator_suite_with_real/
     //TODO: Service implementations
+
+    //TODO: Learn navigation https://developer.android.com/guide/navigation/principles
     NerdGuesserTheme(dynamicColor = false){
         NerdGuesserScaffold(
-            title = stringResource(R.string.anime_number, 1),
+            title = stringResource(R.string.anime_number, gameUiState.gameNumber),
             onBackClick = { gameViewModel.getAnswerDetails() }
         ) {
             innerPadding ->

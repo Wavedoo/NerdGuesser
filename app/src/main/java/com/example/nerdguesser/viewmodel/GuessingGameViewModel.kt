@@ -11,6 +11,7 @@ import androidx.compose.ui.text.AnnotatedString
 import com.example.nerdguesser.model.classes.AnswerData
 import com.example.nerdguesser.model.repositories.MockServer
 import com.example.nerdguesser.view.components.buttons.Status
+import com.example.nerdguesser.view.screens.dataTest
 import kotlinx.coroutines.flow.update
 
 //TODO: Switch to hilt
@@ -31,7 +32,7 @@ class GuessingGameViewModel: ViewModel() {
         //correctAnswer = "Frieren"
         answerData = server.getGameData(1)
         correctAnswer = answerData.name
-        _uiState.value = GuessingGameUiState(correctAnswer = correctAnswer, hints = answerData.hints, images = answerData.images)
+        _uiState.value = GuessingGameUiState(correctAnswer = correctAnswer, hints = answerData.hints, images = answerData.images, gameNumber = dataTest.id.toInt())
     }
 
     //State functions
@@ -119,7 +120,12 @@ class GuessingGameViewModel: ViewModel() {
         }
     }
 
+    private fun test(){
+        println("Data test: ${dataTest.id}")
+    }
+
     init {
         getAnswerDetails()
+        test()
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.nerdguesser.ui.theme.NerdGuesserTheme
 import com.example.nerdguesser.view.screens.GuessAnimeScreen
+import com.example.nerdguesser.view.screens.NerdGuesserApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +28,8 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }*/
-            GuessAnimeScreen()
+            //GuessAnimeScreen()
+            NerdGuesserApp()
         }
     }
 }

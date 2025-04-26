@@ -5,6 +5,7 @@ import com.example.nerdguesser.model.classes.AnswerData
 import com.example.nerdguesser.model.classes.Hints
 
 //TODO: Learn about singletons/objects/repositories/interfaces/etc
+//TODO: Each data gets its own repo (i.e. Games repo, anime repo, users repo)
 class MockServer {
     fun getGameData(gameNumber: Int): AnswerData {
         val name = "Frieren"

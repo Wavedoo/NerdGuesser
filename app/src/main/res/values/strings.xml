@@ -20,4 +20,5 @@
     <string name="guesses">Guesses</string>
     <string name="result_correct">You did it!</string>
     <string name="result_wrong">Womp womp</string>
+    <string name="anime_guesser">Anime Guesser</string>
 </resources>

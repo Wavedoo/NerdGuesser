@@ -21,6 +21,7 @@ class GuessingGameViewModel: ViewModel() {
 
     private val server = MockServer()
 
+    private lateinit var gameId: String
     private lateinit var correctAnswer: String
     private lateinit var answerData: AnswerData
 
@@ -32,7 +33,7 @@ class GuessingGameViewModel: ViewModel() {
         //correctAnswer = "Frieren"
         answerData = server.getGameData(1)
         correctAnswer = answerData.name
-        _uiState.value = GuessingGameUiState(correctAnswer = correctAnswer, hints = answerData.hints, images = answerData.images, gameNumber = dataTest.id.toInt())
+        _uiState.value = GuessingGameUiState(correctAnswer = correctAnswer, hints = answerData.hints, images = answerData.images/*, gameNumber = dataTest.id.toInt()*/)
     }
 
     //State functions
@@ -120,12 +121,16 @@ class GuessingGameViewModel: ViewModel() {
         }
     }
 
-    private fun test(){
+/*    private fun test(){
         println("Data test: ${dataTest.id}")
-    }
+    }*/
 
-    init {
+    fun startGame(id: String){
+        gameId = id
+        println("Game ID is: $gameId")
         getAnswerDetails()
-        test()
     }
+    /*init {
+        test()
+    }*/
 }

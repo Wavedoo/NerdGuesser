@@ -1,27 +1,35 @@
 package com.example.nerdguesser.view.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nerdguesser.R
+import com.example.nerdguesser.model.classes.GameData
 import com.example.nerdguesser.ui.theme.NerdGuesserTheme
 import com.example.nerdguesser.view.components.FrameBar
 import com.example.nerdguesser.view.components.FrameImage
 import com.example.nerdguesser.view.components.GameOverSection
 import com.example.nerdguesser.view.components.GuessSection
 import com.example.nerdguesser.view.components.HintsSection
+import com.example.nerdguesser.view.components.LoadingIndicator
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
 import com.example.nerdguesser.viewmodel.GuessingGameViewModel
 
@@ -29,8 +37,8 @@ private const val s = "Help button"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = viewModel()){
-    gameViewModel.startGame(id)
+fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltViewModel()){
+    gameViewModel.tempInit(id)
 
     val gameUiState by gameViewModel.uiState.collectAsState()
     val clipboardManager = LocalClipboardManager.current
@@ -50,48 +58,57 @@ fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = viewMode
     //TODO: Service implementations
 
     //TODO: Learn navigation https://developer.android.com/guide/navigation/principles
+
+    //TODO: Figure out why removing nerdguessertheme breaks this
     NerdGuesserTheme(dynamicColor = false){
         NerdGuesserScaffold(
-            title = stringResource(R.string.anime_number, gameUiState.gameNumber),
-            onBackClick = { gameViewModel.getAnswerDetails() }
+            title = stringResource(R.string.anime_number, gameUiState.gameData.day),
+            //title = gameData.name,
+            onBackClick = {/* gameViewModel.getAnswerDetails()*/ }
         ) {
             innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ){
-                //Text("hi")
+            if(gameUiState.images.size != 6){
+                LoadingIndicator(innerPadding)
+            }else{
+                Column(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ){
+                    //Text("hi")
+                    if(gameUiState.images.size > 0){
+                        FrameImage(
+                            imageBitmap = gameUiState.images[gameUiState.imageIndex],
+                        )
+                    }
 
-                FrameImage(
-                    imageId = gameUiState.currentImage,
-                    contentDescription = "Frieren"
-                )
-                //TODO: Card?
-                FrameBar(
-                    currentFrame = gameUiState.currentFrame,
-                    frameStatuses = gameUiState.guessResults,
-                    onFrameChange = {gameViewModel.updateFrame(it)}
-                )
-                if(gameUiState.isGameOver){
-                    GameOverSection(
-                        correct = gameUiState.isCorrect,
-                        guesses = gameUiState.guesses,
-                        hints = gameUiState.hints,
-                        onShareClick = {clipboardManager.setText(gameViewModel.shareResults("Anime"))}
+                    //TODO: Card?
+                    FrameBar(
+                        currentFrame = gameUiState.currentFrame,
+                        frameStatuses = gameUiState.guessResults,
+                        onFrameChange = {gameViewModel.updateFrame(it)}
                     )
-                }else{
-                    GuessSection(
-                        guess = gameViewModel.userGuess,
-                        remainingGuesses = gameUiState.remainingGuesses,
-                        onTextChange = {gameViewModel.updateGuess(it)},
-                        onSubmit = { gameViewModel.checkUserGuess() }
-                    )
-                    HintsSection(gameUiState.hints, gameUiState.hintsShown)
+                    if(gameUiState.isGameOver){
+                        GameOverSection(
+                            correct = gameUiState.isCorrect,
+                            guesses = gameUiState.guesses,
+                            hints = gameUiState.gameData.hints,
+                            onShareClick = {clipboardManager.setText(gameViewModel.shareResults("Anime"))}
+                        )
+                    }else{
+                        GuessSection(
+                            guess = gameViewModel.userGuess,
+                            remainingGuesses = gameUiState.remainingGuesses,
+                            onTextChange = {gameViewModel.updateGuess(it)},
+                            onSubmit = { gameViewModel.checkUserGuess() }
+                        )
+                        HintsSection(gameUiState.gameData.hints, gameUiState.hintsShown)
+                    }
+
                 }
-
             }
+
         }
     }
 }
@@ -99,5 +116,5 @@ fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = viewMode
 @Preview
 @Composable
 fun PreviewScreen(){
-    GuessAnimeScreen("test")
+    //GuessAnimeScreen()
 }

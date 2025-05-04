@@ -1,39 +1,120 @@
 package com.example.nerdguesser.viewmodel
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.Image
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.AnnotatedString
+import androidx.lifecycle.viewModelScope
 import com.example.nerdguesser.model.classes.AnswerData
+import com.example.nerdguesser.model.classes.GameData
+import com.example.nerdguesser.model.firebase.FirebaseStorageTest
+import com.example.nerdguesser.model.firebase.FirestoreService
+import com.example.nerdguesser.model.repositories.GameDataSource
 import com.example.nerdguesser.model.repositories.MockServer
+import com.example.nerdguesser.model.repository.GameDataRepository
+import com.example.nerdguesser.model.utils.GameDataUtil
 import com.example.nerdguesser.view.components.buttons.Status
 import com.example.nerdguesser.view.screens.dataTest
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.component1
+import com.google.firebase.storage.component2
+import com.google.firebase.storage.ktx.storage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 //TODO: Switch to hilt
-class GuessingGameViewModel: ViewModel() {
-    private val _uiState = MutableStateFlow(GuessingGameUiState())
-    val uiState: StateFlow<GuessingGameUiState> = _uiState.asStateFlow()
+@HiltViewModel
+class GuessingGameViewModel @Inject constructor(
+    private val gameDataRepository: GameDataRepository
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(NewGuessingGameUiState())
+    val uiState: StateFlow<NewGuessingGameUiState> = _uiState.asStateFlow()
 
-    private val server = MockServer()
+    private lateinit var gameData: GameData
 
-    private lateinit var gameId: String
+    private val firestoreService = FirestoreService()
+
+    //private lateinit var gameData: GameData
+/*    private val _gameData = MutableStateFlow<GameData>(GameDataUtil.test)
+    val gameData: StateFlow<GameData>
+        get() = _gameData.asStateFlow()*/
     private lateinit var correctAnswer: String
     private lateinit var answerData: AnswerData
 
     var userGuess by mutableStateOf("")
         private set
 
-    //Mock functions
-    fun getAnswerDetails(){
-        //correctAnswer = "Frieren"
-        answerData = server.getGameData(1)
-        correctAnswer = answerData.name
-        _uiState.value = GuessingGameUiState(correctAnswer = correctAnswer, hints = answerData.hints, images = answerData.images/*, gameNumber = dataTest.id.toInt()*/)
+    val FIVE_MEGABYTES: Long = 5 * 1024 * 1024
+    val images: MutableList<ImageBitmap> = mutableStateListOf()
+
+
+    //TODO: Change so ID comes from datasource
+    fun tempInit(id: String){
+        viewModelScope.launch {
+            gameData = gameDataRepository.getGameData(id)
+            createState()
+        }
+    }
+
+
+    //Temporary
+    fun createState(){
+        correctAnswer = gameData.name
+        //tryFindingFile()
+        getImages()
+        _uiState.value = NewGuessingGameUiState(gameData = gameData)
+    }
+
+    //TODO: fix so the images are in order
+    fun getImages(){
+        val storage = Firebase.storage
+
+        var gsReference = storage.getReferenceFromUrl(gameData.imageFolder);
+        //val listRef = storage.reference.child("")
+        Log.d("Anime", "gsReference: $gsReference")
+
+        gsReference.listAll()
+            .addOnSuccessListener { (items, prefixes) ->
+                for (item in items) {
+                    Log.d("Anime", "item: ${item}")
+                    addImage(item)
+                }
+                Log.d("Anime", "Adding complete: ${_uiState.value.images.size}")
+            }
+            .addOnFailureListener {
+                Log.d("Anime", "Failure")
+            }
+        Log.d("Anime", "Images: $images")
+    }
+
+    fun addImage(path: StorageReference){
+        Log.d("Anime", "addImage")
+        path.getBytes(FIVE_MEGABYTES).addOnSuccessListener {
+            image ->
+            Log.d("Anime", "onSuccess")
+            val bitmap: ImageBitmap = BitmapFactory.decodeByteArray(image, 0, image.size).asImageBitmap()
+            images.add(bitmap)
+            _uiState.update {
+                it.copy(images = images)
+            }
+            Log.d("Anime", "New size: " + images.size.toString())
+        }
+        Log.d("Anime", "Size: " + images.size.toString())
     }
 
     //State functions
@@ -92,12 +173,12 @@ class GuessingGameViewModel: ViewModel() {
     }
 
     fun updateFrame(frame: Int){
-        _uiState.update { it.copy(currentFrame = frame, currentImage = it.images[frame-1]) }
+        _uiState.update { it.copy(currentFrame = frame, imageIndex = frame - 1) }
     }
 
     //TODO: Change so it's proper share functionality and not just copying
     fun shareResults(gameName: String): AnnotatedString {
-        var results = "NerdGuesser - $gameName #${_uiState.value.gameNumber}\n🤓 "
+        var results = "NerdGuesser - $gameName #${_uiState.value.gameData.day}\n🤓 "
         val correctIndex = if (_uiState.value.isCorrect) _uiState.value.guesses.size - 1 else 6
         for (i: Int in 0 until 6){
             results += if (i < correctIndex)
@@ -126,11 +207,32 @@ class GuessingGameViewModel: ViewModel() {
     }*/
 
     fun startGame(id: String){
-        gameId = id
-        println("Game ID is: $gameId")
-        getAnswerDetails()
+        //awaitGameDataTest(id)
+/*        firestoreService.getGameData(id) {
+            val temp = it
+            Log.d("Anime", "Game data retrieved $temp")
+        }*/
     }
-    /*init {
-        test()
+
+
+
+/*    fun awaitGameDataTest(id: String) = runBlocking{
+        launch {
+            _gameData.value = firestoreService.awaitGameData(id = id)
+            createState()
+
+        }
     }*/
+    /*fun startGame(game: GameData){
+        gameData = game
+        Log.d("Anime", "Game ID is: ${game.id}")
+        getAnswerDetails()
+    }*/
+    init {
+        //correctAnswer = "test"
+        //gameData = GameDataSource.
+        //gameData = GameDataUtil.test
+        //createState()
+        //getAnswerDetails()
+    }
 }

@@ -1,9 +1,12 @@
 package com.example.nerdguesser.view.navigation
 
+import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.example.nerdguesser.model.classes.GameData
+import com.example.nerdguesser.model.utils.GameDataUtil
 import com.example.nerdguesser.view.screens.AnimeListScreen
 import com.example.nerdguesser.view.screens.GuessAnimeScreen
 import kotlinx.serialization.Serializable
@@ -22,8 +25,9 @@ fun NavGraphBuilder.animeGuesserList(onNavigateToGame: (String) -> Unit = {}){
 }
 
 fun NavGraphBuilder.animeGuesserGame(){
-    composable<AnimeGuesserGame> { backStackEntry ->
+    composable<AnimeGuesserGame> {backStackEntry ->
         val animeGuesserGame: AnimeGuesserGame = backStackEntry.toRoute()
+        Log.d("Anime", "animeGuesserGame: ${animeGuesserGame.id}")
         GuessAnimeScreen(id = animeGuesserGame.id)
     }
 }
@@ -35,17 +39,18 @@ fun NavGraphBuilder.nerdGuesserNavGraph(onGameSelected: (String) -> Unit = {}){
     animeGuesserGame()
 }
 
-fun NavGraphBuilder.Test2(){
+/*fun NavGraphBuilder.Test2(){
     animeGuesserList()
     composable<AnimeGuesserList> {
         AnimeListScreen()
     }
     composable<AnimeGuesserGame> {
-        GuessAnimeScreen("placeholder")
+        GuessAnimeScreen()
     }
-}
+}*/
 
-fun NavController.navigateToGame(id: String = "Frieren"){
+fun NavController.navigateToGame(id: String){
     //dataTest.id = id
-    navigate(AnimeGuesserGame(id))
+    Log.d("Anime", "navigateToGame is $id")
+    navigate(AnimeGuesserGame(id = id))
 }

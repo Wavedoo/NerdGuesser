@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -15,9 +16,9 @@ import com.example.nerdguesser.R
 
 //TODO: Get image from server at some point
 @Composable
-fun FrameImage(imageId: Int, contentDescription: String){
+fun FrameImage(imageBitmap: ImageBitmap, contentDescription: String = "Image used for guessing"){
     Image(
-        painter = painterResource(imageId),
+        bitmap = imageBitmap,
         contentDescription = contentDescription,
         modifier = Modifier.aspectRatio(16f / 9f)
     )
@@ -26,10 +27,10 @@ fun FrameImage(imageId: Int, contentDescription: String){
 @Preview
 @Composable
 fun PreviewFrameImage(){
-    Column(modifier = Modifier.fillMaxWidth()) {
+/*    Column(modifier = Modifier.fillMaxWidth()) {
         FrameImage(R.drawable.frieren_village_1, "test")
         FrameImage(R.drawable.fern_stark_5, "test")
         FrameImage(R.drawable.ubel_4, "test")
         FrameImage(R.drawable.frieren_landscape_6, "test")
-    }
+    }*/
 }

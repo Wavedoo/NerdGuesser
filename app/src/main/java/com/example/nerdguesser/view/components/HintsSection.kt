@@ -18,16 +18,16 @@ import com.example.nerdguesser.R
 import com.example.nerdguesser.model.classes.Hints
 
 @Composable
-fun HintsSection(hints: Hints, showHints: Int = 0) {
+fun HintsSection(hints: List<String>, showHints: Int = 0) {
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         if (showHints >= 1){
             Text(stringResource(R.string.hints), style = MaterialTheme.typography.titleLarge)
-            HintText(stringResource(R.string.hint_rating, hints.hint1))
+            HintText(stringResource(R.string.hint_rating, hints[0]))
         }
-        if (showHints >= 2) HintText(stringResource(R.string.hint_demographic, hints.hint2))
-        if (showHints >= 3) HintText(stringResource(R.string.hint_release_date, hints.hint3))
-        if (showHints >= 4) HintText(stringResource(R.string.genres, hints.hint4))
-        if (showHints >= 5) HintText(stringResource(R.string.studios, hints.hint5))
+        if (showHints >= 2) HintText(stringResource(R.string.hint_demographic, hints[1]))
+        if (showHints >= 3) HintText(stringResource(R.string.hint_release_date, hints[2]))
+        if (showHints >= 4) HintText(stringResource(R.string.genres, hints[3]))
+        if (showHints >= 5) HintText(stringResource(R.string.studios, hints[4]))
     }
 }
 
@@ -39,7 +39,7 @@ fun HintText(text: String){
 @Preview
 @Composable
 fun PreviewHints(){
-    val test = Hints()
+    val test = listOf("hi", "there", "how", "are", "you?")
     Box(Modifier
         .background(Color.White)
         .fillMaxWidth()){

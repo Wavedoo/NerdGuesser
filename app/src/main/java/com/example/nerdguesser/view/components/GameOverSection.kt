@@ -20,7 +20,7 @@ fun GameOverSection(
     correct: Boolean = false,
     answer: String = "Frieren: Beyond Journey's End",
     guesses: List<String> = listOf(),
-    hints: Hints = Hints(),
+    hints: List<String> = listOf(),
     onShareClick: () -> Unit = {}
 ){
     var showGuesses by remember { mutableStateOf(false) }

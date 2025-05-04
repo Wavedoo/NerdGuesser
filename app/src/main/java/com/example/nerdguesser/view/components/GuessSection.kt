@@ -37,6 +37,7 @@ fun GuessSection(
     //var guess by remember { mutableStateOf("") }
 
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        //TODO: Replace with ExposedDropdownMenu
         OutlinedTextField(
             value = guess,
             onValueChange = onTextChange,

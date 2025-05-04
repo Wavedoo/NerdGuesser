@@ -14,7 +14,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.nerdguesser.ui.theme.NerdGuesserTheme
 import com.example.nerdguesser.view.screens.GuessAnimeScreen
 import com.example.nerdguesser.view.screens.NerdGuesserApp
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

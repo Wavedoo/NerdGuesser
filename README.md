@@ -8,3 +8,18 @@ Rough design made using Figma:
 ## Features
 - Utilizes Jetpack Compose
 - MVVM based architecture
+- NavHost for navigation
+
+Upcoming:
+- Firebase for backend
+- More screens
+- More games
+
+## Screenshots
+Guessing screens
+
+<img src="screenshots/GuessAnime_FirstFrame.jpg" alt="First Frame" width="200"/> <img src="screenshots/GuessAnime_LastFrame.jpg" alt="Last Frame" width="200"/>
+
+Various results screens
+
+<img src="screenshots/GuessAnime_GameOver_Correct_Hints.jpg" alt="Correct screen with hints" width="200"/> <img src="screenshots/GuessAnime_GameOver_Correct_Guesses.jpg" alt="Correct screen with guesses" width="200"/>  <img src="screenshots/GuessAnime_GameOver_Wrong_Guesses.jpg" alt="Incorrect screen with guesses" width="200"/> 

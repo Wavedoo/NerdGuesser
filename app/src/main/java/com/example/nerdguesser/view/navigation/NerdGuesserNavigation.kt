@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.nerdguesser.model.classes.GameData
 import com.example.nerdguesser.model.utils.GameDataUtil
@@ -39,18 +40,10 @@ fun NavGraphBuilder.nerdGuesserNavGraph(onGameSelected: (String) -> Unit = {}){
     animeGuesserGame()
 }
 
-/*fun NavGraphBuilder.Test2(){
-    animeGuesserList()
-    composable<AnimeGuesserList> {
-        AnimeListScreen()
-    }
-    composable<AnimeGuesserGame> {
-        GuessAnimeScreen()
-    }
-}*/
 
 fun NavController.navigateToGame(id: String){
     //dataTest.id = id
-    Log.d("Anime", "navigateToGame is $id")
+    Log.d("Anime", "navigateToGame is $id\n" +
+            "Called form ...")
     navigate(AnimeGuesserGame(id = id))
 }

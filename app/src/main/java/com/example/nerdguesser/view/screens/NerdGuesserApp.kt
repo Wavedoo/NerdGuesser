@@ -4,8 +4,6 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.example.nerdguesser.model.repositories.GameDataSource
-import com.example.nerdguesser.model.utils.GameDataUtil
 import com.example.nerdguesser.ui.theme.NerdGuesserTheme
 import com.example.nerdguesser.view.navigation.animeGuesserGame
 import com.example.nerdguesser.view.navigation.AnimeGuesserList
@@ -23,8 +21,6 @@ fun NerdGuesserApp(){
         //LoadingScaffold()
         NavHost(navController, startDestination = AnimeGuesserList){
             animeGuesserList(onNavigateToGame = {
-                GameDataSource.id = it
-                Log.d("Anime", "GameDataSource: ${GameDataSource.id}")
                 navController.navigateToGame(it)
             })
             animeGuesserGame()

@@ -8,6 +8,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import kotlinx.coroutines.delay
+
 
 class GameDataDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
@@ -26,6 +28,8 @@ class GameDataDataSource @Inject constructor(
 
     //TODO: look into best nullability practices
     suspend fun getGameData(id: String): GameData {
+        /*delay(2000)
+        return GameDataUtil.test*/
         val document = firestore.collection("AnimeFrameGuesser").document(id).get().await()
         val gameData = GameDataUtil.documentToGameData(document)
         Log.d("Anime", "Datasource: $gameData")

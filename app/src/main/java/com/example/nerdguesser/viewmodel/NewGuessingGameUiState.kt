@@ -39,5 +39,6 @@ data class NewGuessingGameUiState(
     val isCorrect: Boolean = false,
     val isGameOver: Boolean = false,
     val imageIndex: Int = 0,
+    val maxFrame: Int = 1,
     val images: List<ImageBitmap> = emptyList()
 )

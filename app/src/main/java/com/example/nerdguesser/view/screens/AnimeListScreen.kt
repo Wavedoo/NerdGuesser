@@ -66,6 +66,7 @@ Also that's 15 fields / document i won't be reading, and +15 for each one i want
 @Composable
 fun AnimeListScreen(onCardClick: (String) -> Unit = {}, animeListViewModel: AnimeListViewModel = hiltViewModel()){
     val gamesList by animeListViewModel.gamesList.collectAsState()
+    Log.d("Anime", "AnimeListScreen called")
 
     NerdGuesserScaffold(
         title = stringResource(R.string.anime_guesser),
@@ -86,6 +87,7 @@ fun AnimeListScreenContent(
     gamesList: List<String>,
     onCardClick: (String) -> Unit = {}
 ){
+    Log.d("Anime", "AnimeListScreenContent called")
     LazyColumn (modifier = Modifier
         .padding(innerPadding)
         .fillMaxSize()

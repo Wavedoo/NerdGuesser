@@ -1,5 +1,6 @@
 package com.example.nerdguesser.view.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,10 +39,17 @@ private const val s = "Help button"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltViewModel()){
-    gameViewModel.tempInit(id)
+    Log.d("Anime", "GuessAnimeScreen parameters:\n\t" +
+            "ID: $id, viewmodel: $gameViewModel.")
+    LaunchedEffect(true) {
+        gameViewModel.tempInit(id)
+    }
+    Log.d("Anime", "GuessAnimeScreen repeated call check")
 
     val gameUiState by gameViewModel.uiState.collectAsState()
     val clipboardManager = LocalClipboardManager.current
+
+    Log.d("Anime", "called GuessAnimeScreen")
 
     //TODO: Add documentations and more comments? - Not needed
     //TODO: Refactor code, universal button, theming  - Take a second look at the universal button
@@ -60,57 +68,57 @@ fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltView
     //TODO: Learn navigation https://developer.android.com/guide/navigation/principles
 
     //TODO: Figure out why removing nerdguessertheme breaks this
-    NerdGuesserTheme(dynamicColor = false){
-        NerdGuesserScaffold(
-            title = stringResource(R.string.anime_number, gameUiState.gameData.day),
-            //title = gameData.name,
-            onBackClick = {/* gameViewModel.getAnswerDetails()*/ }
-        ) {
-            innerPadding ->
-            if(gameUiState.images.size != 6){
-                LoadingIndicator(innerPadding)
-            }else{
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ){
-                    //Text("hi")
-                    if(gameUiState.images.size > 0){
-                        FrameImage(
-                            imageBitmap = gameUiState.images[gameUiState.imageIndex],
-                        )
-                    }
-
-                    //TODO: Card?
-                    FrameBar(
-                        currentFrame = gameUiState.currentFrame,
-                        frameStatuses = gameUiState.guessResults,
-                        onFrameChange = {gameViewModel.updateFrame(it)}
+    NerdGuesserScaffold(
+        title = stringResource(R.string.anime_number, gameUiState.gameData.day),
+        //title = gameData.name,
+        onBackClick = {/* gameViewModel.getAnswerDetails()*/ }
+    ) {
+        innerPadding ->
+        Log.d("Anime", "scaffold called:")
+        if(gameUiState.images.size != 6){
+            LoadingIndicator(innerPadding)
+        }else{
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ){
+                //Text("hi")
+                if(gameUiState.images.size > 0){
+                    FrameImage(
+                        imageBitmap = gameUiState.images[gameUiState.currentFrame-1],
                     )
-                    if(gameUiState.isGameOver){
-                        GameOverSection(
-                            correct = gameUiState.isCorrect,
-                            guesses = gameUiState.guesses,
-                            hints = gameUiState.gameData.hints,
-                            onShareClick = {clipboardManager.setText(gameViewModel.shareResults("Anime"))}
-                        )
-                    }else{
-                        GuessSection(
-                            guess = gameViewModel.userGuess,
-                            remainingGuesses = gameUiState.remainingGuesses,
-                            onTextChange = {gameViewModel.updateGuess(it)},
-                            onSubmit = { gameViewModel.checkUserGuess() }
-                        )
-                        HintsSection(gameUiState.gameData.hints, gameUiState.hintsShown)
-                    }
-
                 }
-            }
 
+                //TODO: Card?
+                FrameBar(
+                    currentFrame = gameUiState.currentFrame,
+                    frameStatuses = gameUiState.guessResults,
+                    onFrameChange = {gameViewModel.updateFrame(it)}
+                )
+                if(gameUiState.isGameOver){
+                    GameOverSection(
+                        correct = gameUiState.isCorrect,
+                        guesses = gameUiState.guesses,
+                        hints = gameUiState.gameData.hints,
+                        onShareClick = {clipboardManager.setText(gameViewModel.shareResults("Anime"))}
+                    )
+                }else{
+                    GuessSection(
+                        guess = gameViewModel.userGuess,
+                        remainingGuesses = gameUiState.remainingGuesses,
+                        onTextChange = {gameViewModel.updateGuess(it)},
+                        onSubmit = { gameViewModel.checkUserGuess() }
+                    )
+                    HintsSection(gameUiState.gameData.hints, gameUiState.hintsShown)
+                }
+
+            }
         }
+
     }
+
 }
 
 @Preview

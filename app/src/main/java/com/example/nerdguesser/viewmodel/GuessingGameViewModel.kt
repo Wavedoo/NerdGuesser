@@ -1,8 +1,6 @@
 package com.example.nerdguesser.viewmodel
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.Image
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -12,20 +10,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.viewModelScope
 import com.example.nerdguesser.model.classes.AnswerData
 import com.example.nerdguesser.model.classes.GameData
-import com.example.nerdguesser.model.firebase.FirebaseStorageTest
-import com.example.nerdguesser.model.firebase.FirestoreService
-import com.example.nerdguesser.model.repositories.GameDataSource
-import com.example.nerdguesser.model.repositories.MockServer
 import com.example.nerdguesser.model.repository.GameDataRepository
+import com.example.nerdguesser.model.repository.ImageDataRepository
 import com.example.nerdguesser.model.utils.GameDataUtil
 import com.example.nerdguesser.view.components.buttons.Status
-import com.example.nerdguesser.view.screens.dataTest
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.component1
@@ -34,20 +29,18 @@ import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 //TODO: Switch to hilt
 @HiltViewModel
 class GuessingGameViewModel @Inject constructor(
-    private val gameDataRepository: GameDataRepository
+    private val gameDataRepository: GameDataRepository,
+    private val imageDataRepository: ImageDataRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NewGuessingGameUiState())
     val uiState: StateFlow<NewGuessingGameUiState> = _uiState.asStateFlow()
 
     private lateinit var gameData: GameData
-
-    private val firestoreService = FirestoreService()
 
     //private lateinit var gameData: GameData
 /*    private val _gameData = MutableStateFlow<GameData>(GameDataUtil.test)
@@ -60,28 +53,32 @@ class GuessingGameViewModel @Inject constructor(
         private set
 
     val FIVE_MEGABYTES: Long = 5 * 1024 * 1024
-    val images: MutableList<ImageBitmap> = mutableStateListOf()
+    var images: MutableList<ImageBitmap> = mutableStateListOf()
 
 
     //TODO: Change so ID comes from datasource
     fun tempInit(id: String){
+        Log.d("Anime", "tempInit repeated call check")
         viewModelScope.launch {
             gameData = gameDataRepository.getGameData(id)
+            //gameData = GameDataUtil.test
+            Log.d("Anime", "viewModelScope.launch repeated call check")
             createState()
         }
+
     }
 
-
     //Temporary
-    fun createState(){
+    suspend fun createState(){
         correctAnswer = gameData.name
         //tryFindingFile()
-        getImages()
-        _uiState.value = NewGuessingGameUiState(gameData = gameData)
+        images = imageDataRepository.getImages(gameData.imageFolder).toMutableStateList()
+        Log.d("Anime", "createState repeated call check")
+        _uiState.value = NewGuessingGameUiState(gameData = gameData, images = images)
     }
 
     //TODO: fix so the images are in order
-    fun getImages(){
+    /*fun getImages(){
         val storage = Firebase.storage
 
         var gsReference = storage.getReferenceFromUrl(gameData.imageFolder);
@@ -100,7 +97,7 @@ class GuessingGameViewModel @Inject constructor(
                 Log.d("Anime", "Failure")
             }
         Log.d("Anime", "Images: $images")
-    }
+    }*/
 
     fun addImage(path: StorageReference){
         Log.d("Anime", "addImage")
@@ -146,6 +143,7 @@ class GuessingGameViewModel @Inject constructor(
                     remainingGuesses = it.remainingGuesses.dec(),
                     hintsShown = it.hintsShown.inc(),
                     isGameOver = gameOver,
+                    maxFrame = it.maxFrame.inc()
                     /*currentFrame = frame*/
                 )
             }
@@ -163,17 +161,20 @@ class GuessingGameViewModel @Inject constructor(
 
         val frameStatus = if (correct) Status.Correct else Status.Wrong
         val newGuesses = _uiState.value.guesses + listText
+
         _uiState.update { it ->
-            it.guessResults[it.currentFrame-1] = frameStatus
+            val maxFrame = it.remainingGuesses
+            it.guessResults[it.maxFrame-1] = frameStatus
             if (it.currentFrame < 6) {
-                it.guessResults[it.currentFrame] = Status.NotGuessed
+                it.guessResults[it.maxFrame] = Status.NotGuessed
             }
             it.copy(guesses = newGuesses)
         }
     }
 
+    //TODO: Check if I even need this
     fun updateFrame(frame: Int){
-        _uiState.update { it.copy(currentFrame = frame, imageIndex = frame - 1) }
+        _uiState.update { it.copy(currentFrame = frame) }
     }
 
     //TODO: Change so it's proper share functionality and not just copying

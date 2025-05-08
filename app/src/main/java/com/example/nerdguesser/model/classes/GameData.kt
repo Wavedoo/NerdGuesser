@@ -22,7 +22,7 @@ data class GameData(
     @DocumentId val id: String,
     val name: String,
     val day: Int,
-    val hints: List<String>,
+    val hints: List<String>, /*rating, demographic, release date, genres, studios*/
     val imageFolder: String,
     val totalGuesses: Int,
     val firstFrameGuesses: Int,

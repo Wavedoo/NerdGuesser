@@ -37,32 +37,6 @@ enum class Status(val rgb: Long){
     Disabled(0xFFD9D9D9)
 }
 
-/*
-TODO: Rewrite firestore to be like:
-AnimeFrameDays:
-    array 1:
-        day 1
-        id
-    array 2
-        day 2
-        id
-So it's one read with 100 fields instead of
-100 reads with 17 fields
-
-In the long run the cost of 100000 people using it all on day 1000 once would be:
-Type A:
-100,000 people reading two documents (all documents then today's document)
-200000 documents - $0
-
-Type B:
-100,000 people reading 100 documents once
-10000000 documents - $5.91
-
-Lowers the cost of document reads
-
-Also that's 15 fields / document i won't be reading, and +15 for each one i want to play
- */
-
 @Composable
 fun AnimeListScreen(onCardClick: (String) -> Unit = {}, animeListViewModel: AnimeListViewModel = hiltViewModel()){
     val gamesList by animeListViewModel.gamesList.collectAsState()
@@ -92,61 +66,10 @@ fun AnimeListScreenContent(
         .padding(innerPadding)
         .fillMaxSize()
     ){
-        //val test: List<GameData> = emptyList()
-
         itemsIndexed(gamesList){index, id ->
             Log.d("Anime", "Day: $index, ID: $id")
             GameCard(onCardClick, id = id, day = index + 1)
-
         }
-        /*items(2){
-            GameCard(onCardClick, day = it + 1, status = Status.NotGuessed )
-        }
-        item{
-            GameCard(onCardClick, day = 3, status = Status.Wrong)
-        }
-        item{
-            GameCard(onCardClick, day = 4, status = Status.Correct)
-        }
-        item{
-            GameCard(onCardClick, day = 5, status = Status.Close)
-        }
-        item{
-            GameCard(onCardClick, day = 6, status = Status.Disabled)
-        }
-        item{
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .padding(horizontal = 12.dp, vertical = 6.dp),
-                onClick = { onCardClick("f") }
-            ) {
-                Row(modifier = Modifier
-                    .padding(all = 8.dp)
-                    .fillMaxSize(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text(modifier = Modifier.align(Alignment.CenterVertically), text = "Day #7")
-                    Text(text = "Incomplete")
-                }
-            }
-        }
-        item{
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .padding(horizontal = 12.dp, vertical = 6.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(Status.NotGuessed.rgb)),
-                onClick = { onCardClick("f") }
-            ) {
-                Row(modifier = Modifier
-                    .padding(all = 8.dp)
-                    .fillMaxSize(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text(modifier = Modifier.align(Alignment.CenterVertically), text = "Day #8")
-                    Text(text = "Incomplete")
-                }
-            }
-        }*/
     }
 }
 
@@ -156,9 +79,7 @@ fun GameCard(
     id: String,
     day: Int = 1,
     status: Status = Status.NotGuessed
-    //gameId: String = ""
 ){
-    //Temp:
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -167,14 +88,13 @@ fun GameCard(
         colors = CardDefaults.cardColors(containerColor = Color(status.rgb)),
         onClick = {
             Log.d("Anime", "From card: $id")
-            //GameDataSource.id = id
             onCardClick(id)
         }
     ) {
         Row(modifier = Modifier
             .padding(all = 8.dp)
             .fillMaxSize(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text(modifier = Modifier.align(Alignment.CenterVertically), text = "Day #${day}")
+            Text(modifier = Modifier.align(Alignment.CenterVertically), text = "Day #$day")
             Text(text = "Incomplete")
         }
     }

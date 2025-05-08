@@ -6,9 +6,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.toObject
 
 object GameDataUtil {
-    val test: GameData = GameData(
-        "f", "frieren", 1, listOf("fa", "Fas", "fsaf", "Fdsfdas", "fasdfasd"),
-        imageFolder = "TODO()",
+    val placeholder: GameData = GameData(
+        id = "placeholder",
+        name = "frieren",
+        day = 0,
+        hints = listOf("Hint 1", "Hint 2", "Hint 3", "Hint 4", "Hint 5"),
+        imageFolder = "placeholder",
         totalGuesses = 0,
         firstFrameGuesses = 0,
         secondFrameGuesses = 0,

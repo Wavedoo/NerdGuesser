@@ -18,22 +18,12 @@ Something about mutableListOf not retriggering recomposition
 
 //TODO: change hints, correctAnswer, and images into AnswerData
 data class NewGuessingGameUiState(
-    val gameData: GameData = GameDataUtil.test,
+    val gameData: GameData = GameDataUtil.placeholder,
 
     //non-firestore
     val remainingGuesses: Int = 6,
     val hintsShown: Int = 0,
     val guesses: List<String> = listOf(),
-    /*
-    TODO: Figure out which way is better
-    MutableList(6) {
-        if(it == 0) {
-            Status.NotGuessed
-        }else{
-            Status.Disabled
-        }
-    }
-    */
     val guessResults: MutableList<Status> = mutableStateListOf(Status.NotGuessed, Status.Disabled, Status.Disabled, Status.Disabled, Status.Disabled, Status.Disabled),
     val currentFrame: Int = 1,
     val isCorrect: Boolean = false,

@@ -39,59 +39,38 @@ private const val s = "Help button"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltViewModel()){
-    Log.d("Anime", "GuessAnimeScreen parameters:\n\t" +
-            "ID: $id, viewmodel: $gameViewModel.")
     LaunchedEffect(true) {
         gameViewModel.tempInit(id)
     }
-    Log.d("Anime", "GuessAnimeScreen repeated call check")
 
     val gameUiState by gameViewModel.uiState.collectAsState()
     val clipboardManager = LocalClipboardManager.current
 
-    Log.d("Anime", "called GuessAnimeScreen")
-
     //TODO: Add documentations and more comments? - Not needed
-    //TODO: Refactor code, universal button, theming  - Take a second look at the universal button
+    //TODO: Take another look at how I have everything set up - Components and buttons and stuff
+    //TODO: Get better at using Material3
 
-    //TODO: Find a good colour scheme and see if dynamic colour is good - No dynamic colour, custom colour theme is low priority
-    //TODO: Proper theming colours, typography, shapes, etc - I am now using Material3 stuff
-    //TODO: ModalNavigationDrawer is probably good or i could just use home -> anime -> anime #1 and back buttons - expanding the app should be my current priority
-
-
-    //TODO: https://firebase.google.com/codelabs/firestore-android#0
-    //TODO: https://developers.google.com/learn/pathways/firebase-android-jetpack
-    //TODO: https://firebase.google.com/codelabs/build-android-app-with-firebase-compose#0
-    //https://www.reddit.com/r/Firebase/comments/k4lj94/connecting_firebase_emulator_suite_with_real/
-    //TODO: Service implementations
-
-    //TODO: Learn navigation https://developer.android.com/guide/navigation/principles
-
-    //TODO: Figure out why removing nerdguessertheme breaks this
+    val title = if (gameUiState.gameData.day != 0) stringResource(R.string.anime_number, gameUiState.gameData.day) else "Anime Guesser"
     NerdGuesserScaffold(
-        title = stringResource(R.string.anime_number, gameUiState.gameData.day),
-        //title = gameData.name,
+        title = title,
         onBackClick = {/* gameViewModel.getAnswerDetails()*/ }
     ) {
         innerPadding ->
-        Log.d("Anime", "scaffold called:")
+        //The game is ready to be played
         if(gameUiState.images.size != 6){
             LoadingIndicator(innerPadding)
         }else{
+            //TODO: Possibly move to GuessAnimeScreenContent composable
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ){
-                //Text("hi")
-                if(gameUiState.images.size > 0){
-                    FrameImage(
-                        imageBitmap = gameUiState.images[gameUiState.currentFrame-1],
-                    )
-                }
+                FrameImage(
+                    imageBitmap = gameUiState.images[gameUiState.currentFrame-1],
+                )
 
-                //TODO: Card?
                 FrameBar(
                     currentFrame = gameUiState.currentFrame,
                     frameStatuses = gameUiState.guessResults,
@@ -101,7 +80,7 @@ fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltView
                     GameOverSection(
                         correct = gameUiState.isCorrect,
                         guesses = gameUiState.guesses,
-                        hints = gameUiState.gameData.hints,
+                        hints = gameUiState.gameData!!.hints,
                         onShareClick = {clipboardManager.setText(gameViewModel.shareResults("Anime"))}
                     )
                 }else{
@@ -111,7 +90,7 @@ fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltView
                         onTextChange = {gameViewModel.updateGuess(it)},
                         onSubmit = { gameViewModel.checkUserGuess() }
                     )
-                    HintsSection(gameUiState.gameData.hints, gameUiState.hintsShown)
+                    HintsSection(gameUiState.gameData!!.hints, gameUiState.hintsShown)
                 }
 
             }

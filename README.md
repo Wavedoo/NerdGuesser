@@ -10,6 +10,7 @@ Rough design made using Figma:
 - MVVM based architecture
 - NavHost for navigation
 - Firebase for backend
+- Dependency injection using hilt
 
 Upcoming:
 

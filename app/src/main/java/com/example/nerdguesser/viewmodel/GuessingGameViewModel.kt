@@ -22,12 +22,30 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//TODO: Switch to hilt
+val options = listOf(
+    "Naruto",
+    "Naruto Shippuden",
+    "Frieren",
+    "Spy x Family",
+    "Neon Genesis Evangelion",
+    "86",
+    "Rock Is a Lady's Modesty",
+    "Attack on Titan",
+    "Shingeki no Kyojin",
+    "Beastars",
+    "Dandadan",
+    "Danganronpa",
+    "Danganronpa: The Animation"
+)
+
+
 @HiltViewModel
 class GuessingGameViewModel @Inject constructor(
     private val gameDataRepository: GameDataRepository,
     private val imageDataRepository: ImageDataRepository
 ) : ViewModel() {
+
+    //TODO: Read this https://developer.android.com/develop/ui/compose/state-saving
     private val _uiState = MutableStateFlow(NewGuessingGameUiState())
     val uiState: StateFlow<NewGuessingGameUiState> = _uiState.asStateFlow()
 
@@ -38,7 +56,6 @@ class GuessingGameViewModel @Inject constructor(
         private set
 
     private var images: MutableList<ImageBitmap> = mutableStateListOf()
-
 
     //TODO: Change so ID comes from datasource
     fun tempInit(id: String){
@@ -61,6 +78,7 @@ class GuessingGameViewModel @Inject constructor(
 
     fun updateGuess(guess: String){
         userGuess = guess
+        filterResults(guess)
     }
 
     fun checkUserGuess(){
@@ -139,5 +157,14 @@ class GuessingGameViewModel @Inject constructor(
             }
             it.copy()
         }
+    }
+
+    private fun filterResults(word: String){
+        //starts the list with words that start with the word
+        val filteredList: MutableList<String> = com.example.nerdguesser.view.screens.options.filter { it.startsWith(word, ignoreCase = true) }.toMutableList()
+        //adds to the list words that contain the word but don't start with the word
+        filteredList.addAll(com.example.nerdguesser.view.screens.options.filter { !it.startsWith(word, ignoreCase = true) && it.contains(word, ignoreCase = true) })
+
+        _uiState.update { it.copy(filteredResults = filteredList) }
     }
 }

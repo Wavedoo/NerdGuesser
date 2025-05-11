@@ -79,8 +79,9 @@ fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltView
                 if(gameUiState.isGameOver){
                     GameOverSection(
                         correct = gameUiState.isCorrect,
+                        answer = gameUiState.gameData.name ,
                         guesses = gameUiState.guesses,
-                        hints = gameUiState.gameData!!.hints,
+                        hints = gameUiState.gameData.hints,
                         onShareClick = {clipboardManager.setText(gameViewModel.shareResults("Anime"))}
                     )
                 }else{
@@ -88,9 +89,10 @@ fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltView
                         guess = gameViewModel.userGuess,
                         remainingGuesses = gameUiState.remainingGuesses,
                         onTextChange = {gameViewModel.updateGuess(it)},
-                        onSubmit = { gameViewModel.checkUserGuess() }
+                        onSubmit = { gameViewModel.checkUserGuess() },
+                        filteredResults = gameUiState.filteredResults
                     )
-                    HintsSection(gameUiState.gameData!!.hints, gameUiState.hintsShown)
+                    HintsSection(gameUiState.gameData.hints, gameUiState.hintsShown)
                 }
 
             }

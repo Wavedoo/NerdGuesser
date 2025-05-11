@@ -18,10 +18,10 @@ import com.example.nerdguesser.model.classes.Hints
 @Composable
 fun GameOverSection(
     correct: Boolean = false,
-    answer: String = "Frieren: Beyond Journey's End",
-    guesses: List<String> = listOf(),
-    hints: List<String> = listOf(),
-    onShareClick: () -> Unit = {}
+    answer: String,
+    guesses: List<String>,
+    hints: List<String>,
+    onShareClick: () -> Unit
 ){
     var showGuesses by remember { mutableStateOf(false) }
     Column(
@@ -46,8 +46,16 @@ fun GameOverSection(
 @Preview
 @Composable
 fun PreviewGameOver(){
-    Column(modifier = Modifier.fillMaxWidth().background(color = Color.White)){
-        GameOverSection()
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .background(color = Color.White)){
+        GameOverSection(
+            correct = true,
+            answer = "placeholder",
+            guesses = listOf(),
+            hints = listOf(),
+            onShareClick = { }
+        )
     }
 }
 

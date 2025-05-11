@@ -22,11 +22,11 @@ import com.example.nerdguesser.view.components.buttons.ShareButton
 
 @Composable
 fun ResultsSection(
-    correct: Boolean = true,
-    answer: String = "Frieren: Beyond Journey's End",
+    correct: Boolean,
+    answer: String,
     showGuesses: Boolean = false,
-    onGuessesClick: () -> Unit = {},
-    onShareClick: () -> Unit = {}
+    onGuessesClick: () -> Unit,
+    onShareClick: () -> Unit
 ){
     val resultColour: Color = if (correct) Color(0xFF3DDC85) else Color(0xFFDC3D3D)
     val resultMessage: String = if (correct)
@@ -71,7 +71,13 @@ fun ResultsText(
 fun PreviewSection(){
     Column(modifier = Modifier
         .fillMaxWidth()
-        .background(Color.White)) {
-        ResultsSection()
+        .background(Color.White)
+    ) {
+        ResultsSection(
+            correct = true,
+            answer = "placeholder",
+            onGuessesClick = {},
+            onShareClick = {}
+        )
     }
 }

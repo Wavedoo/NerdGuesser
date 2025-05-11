@@ -33,20 +33,12 @@ fun GuessSection(
     guess: String = "",
     onTextChange: (String) -> Unit = {},
     onSubmit: () -> Unit = {},
+    filteredResults: List<String>
 ){
     //var guess by remember { mutableStateOf("") }
 
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        //TODO: Replace with ExposedDropdownMenu
-        OutlinedTextField(
-            value = guess,
-            onValueChange = onTextChange,
-            label = null,
-            placeholder = { Text(stringResource(R.string.guess_the_anime)) },
-            modifier =  Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        )
+        GuessBar(guess = guess, onTextChange = onTextChange, filterResults = filteredResults)
         Text(stringResource(R.string.guesses_remaining, remainingGuesses), Modifier.padding(vertical = 10.dp))
         SubmitButton(guess, onSubmit)
 
@@ -57,7 +49,7 @@ fun GuessSection(
 @Composable
 fun PreviewGuess(){
     Column(Modifier.background(Color.White)) {
-        GuessSection()
+        GuessSection(filteredResults = emptyList())
 
     }
 }

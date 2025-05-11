@@ -16,7 +16,7 @@ Related: https://developer.android.com/develop/ui/compose/state#state-in-composa
 Something about mutableListOf not retriggering recomposition
 */
 
-//TODO: change hints, correctAnswer, and images into AnswerData
+//TODO: Add nullable stuff?
 data class NewGuessingGameUiState(
     val gameData: GameData = GameDataUtil.placeholder,
 
@@ -30,5 +30,6 @@ data class NewGuessingGameUiState(
     val isGameOver: Boolean = false,
     val imageIndex: Int = 0,
     val maxFrame: Int = 1,
-    val images: List<ImageBitmap> = emptyList()
+    val images: List<ImageBitmap> = emptyList(),
+    val filteredResults: List<String> = emptyList()
 )

@@ -161,9 +161,9 @@ class GuessingGameViewModel @Inject constructor(
 
     private fun filterResults(word: String){
         //starts the list with words that start with the word
-        val filteredList: MutableList<String> = com.example.nerdguesser.view.screens.options.filter { it.startsWith(word, ignoreCase = true) }.toMutableList()
+        val filteredList: MutableList<String> = options.filter { it.startsWith(word, ignoreCase = true) }.toMutableList()
         //adds to the list words that contain the word but don't start with the word
-        filteredList.addAll(com.example.nerdguesser.view.screens.options.filter { !it.startsWith(word, ignoreCase = true) && it.contains(word, ignoreCase = true) })
+        filteredList.addAll(options.filter { !it.startsWith(word, ignoreCase = true) && it.contains(word, ignoreCase = true) })
 
         _uiState.update { it.copy(filteredResults = filteredList) }
     }

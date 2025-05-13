@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.nerdguesser.R
 import com.example.nerdguesser.view.components.LoadingIndicator
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
@@ -39,7 +40,7 @@ enum class Status(val rgb: Long){
 
 @Composable
 fun AnimeListScreen(onCardClick: (String) -> Unit = {}, animeListViewModel: AnimeListViewModel = hiltViewModel()){
-    val gamesList by animeListViewModel.gamesList.collectAsState()
+    val gamesList by animeListViewModel.gamesList.collectAsStateWithLifecycle()
     Log.d("Anime", "AnimeListScreen called")
 
     NerdGuesserScaffold(

@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.nerdguesser.view.components.buttons.SubmitButton
@@ -30,8 +31,8 @@ import com.example.nerdguesser.view.components.buttons.SubmitButton
 @Composable
 fun GuessSection(
     remainingGuesses: Int = 6,
-    guess: String = "",
-    onTextChange: (String) -> Unit = {},
+    guess: TextFieldValue,
+    onTextChange: (TextFieldValue) -> Unit = {},
     onSubmit: () -> Unit = {},
     filteredResults: List<String>
 ){
@@ -40,7 +41,7 @@ fun GuessSection(
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         GuessBar(guess = guess, onTextChange = onTextChange, filterResults = filteredResults)
         Text(stringResource(R.string.guesses_remaining, remainingGuesses), Modifier.padding(vertical = 10.dp))
-        SubmitButton(guess, onSubmit)
+        SubmitButton(guess.text, onSubmit)
 
     }
 }
@@ -49,7 +50,7 @@ fun GuessSection(
 @Composable
 fun PreviewGuess(){
     Column(Modifier.background(Color.White)) {
-        GuessSection(filteredResults = emptyList())
+        GuessSection(guess = TextFieldValue(), filteredResults = emptyList())
 
     }
 }

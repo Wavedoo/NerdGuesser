@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import com.example.nerdguesser.model.classes.GameData
 import com.example.nerdguesser.model.repository.GameDataRepository
@@ -46,43 +47,44 @@ class GuessingGameViewModel @Inject constructor(
 ) : ViewModel() {
 
     //TODO: Read this https://developer.android.com/develop/ui/compose/state-saving
-    private val _uiState = MutableStateFlow(NewGuessingGameUiState())
-    val uiState: StateFlow<NewGuessingGameUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(GuessingGameUiState())
+    val uiState: StateFlow<GuessingGameUiState> = _uiState.asStateFlow()
 
     private lateinit var gameData: GameData
     private lateinit var correctAnswer: String
 
-    var userGuess by mutableStateOf("")
+    var userGuess by mutableStateOf(TextFieldValue())
         private set
+    /*var userGuess by mutableStateOf("")
+        private set*/
 
     private var images: MutableList<ImageBitmap> = mutableStateListOf()
 
     //TODO: Change so ID comes from datasource
+    //I'll probably leave it. it should be fine...
     fun tempInit(id: String){
         Log.d("Anime", "tempInit repeated call check")
         viewModelScope.launch {
             gameData = gameDataRepository.getGameData(id)
             Log.d("Anime", "viewModelScope.launch repeated call check")
             createState()
-        }
 
+        }
     }
 
-    //Temporary
     private suspend fun createState(){
         correctAnswer = gameData.name
         images = imageDataRepository.getImages(gameData.imageFolder).toMutableStateList()
-        Log.d("Anime", "createState repeated call check")
-        _uiState.value = NewGuessingGameUiState(gameData = gameData, images = images)
+        _uiState.value = GuessingGameUiState(gameData = gameData, images = images)
     }
 
-    fun updateGuess(guess: String){
+    fun updateGuess(guess: TextFieldValue){
         userGuess = guess
-        filterResults(guess)
+        filterResults(guess.text)
     }
 
     fun checkUserGuess(){
-        val correct = userGuess.trim().equals(correctAnswer, ignoreCase = true)
+        val correct = userGuess.text.trim().equals(correctAnswer, ignoreCase = true)
         val gameOver = _uiState.value.remainingGuesses == 1
 
         addGuess(correct)
@@ -105,14 +107,15 @@ class GuessingGameViewModel @Inject constructor(
                 )
             }
         }
+        resetGuess()
     }
 
     //TODO: Add a no redo thing
     private fun addGuess(correct: Boolean){
         val listText = if (correct)
-            "✅ $userGuess"
-        else if(userGuess.isNotEmpty())
-            "❌ $userGuess"
+            "✅ ${userGuess.text}"
+        else if(userGuess.text.isNotEmpty())
+            "❌ ${userGuess.text}"
         else
             "❌ Skipped"
 
@@ -160,11 +163,21 @@ class GuessingGameViewModel @Inject constructor(
     }
 
     private fun filterResults(word: String){
-        //starts the list with words that start with the word
-        val filteredList: MutableList<String> = options.filter { it.startsWith(word, ignoreCase = true) }.toMutableList()
-        //adds to the list words that contain the word but don't start with the word
-        filteredList.addAll(options.filter { !it.startsWith(word, ignoreCase = true) && it.contains(word, ignoreCase = true) })
+        if(word.isEmpty()){
+            //I don't want a list to show when the guess is empty
+            _uiState.update { it.copy(filteredResults = emptyList()) }
+        }else{
+            //starts the list with words that start with the word
+            val filteredList: MutableList<String> = options.filter { it.startsWith(word, ignoreCase = true) }.toMutableList()
+            //adds to the list words that contain the word but don't start with the word
+            filteredList.addAll(options.filter { !it.startsWith(word, ignoreCase = true) && it.contains(word, ignoreCase = true) })
 
-        _uiState.update { it.copy(filteredResults = filteredList) }
+            _uiState.update { it.copy(filteredResults = filteredList) }
+        }
+    }
+
+    private fun resetGuess(){
+        userGuess = TextFieldValue()
+        _uiState.update { it.copy(filteredResults = emptyList()) }
     }
 }

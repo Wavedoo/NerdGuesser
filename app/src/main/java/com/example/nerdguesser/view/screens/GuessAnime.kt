@@ -15,12 +15,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nerdguesser.R
 import com.example.nerdguesser.model.classes.GameData
@@ -43,8 +45,8 @@ fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltView
         gameViewModel.tempInit(id)
     }
 
-    val gameUiState by gameViewModel.uiState.collectAsState()
-    val clipboardManager = LocalClipboardManager.current
+    val gameUiState by gameViewModel.uiState.collectAsStateWithLifecycle()
+    val clipboard = LocalClipboard.current
 
     //TODO: Add documentations and more comments? - Not needed
     //TODO: Take another look at how I have everything set up - Components and buttons and stuff
@@ -82,7 +84,8 @@ fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltView
                         answer = gameUiState.gameData.name ,
                         guesses = gameUiState.guesses,
                         hints = gameUiState.gameData.hints,
-                        onShareClick = {clipboardManager.setText(gameViewModel.shareResults("Anime"))}
+                        //TODO: Fix this
+                        onShareClick = {/*clipboard.setText(gameViewModel.shareResults("Anime"))*/}
                     )
                 }else{
                     GuessSection(

@@ -80,7 +80,7 @@ class GuessingGameViewModel @Inject constructor(
 
     fun updateGuess(guess: TextFieldValue){
         userGuess = guess
-        filterResults(guess.text)
+        filterResults()
     }
 
     fun checkUserGuess(){
@@ -162,7 +162,9 @@ class GuessingGameViewModel @Inject constructor(
         }
     }
 
-    private fun filterResults(word: String){
+    private fun filterResults(){
+        val word = userGuess.text
+
         if(word.isEmpty()){
             //I don't want a list to show when the guess is empty
             _uiState.update { it.copy(filteredResults = emptyList()) }

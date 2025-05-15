@@ -1,5 +1,6 @@
 package com.example.nerdguesser.viewmodel
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -13,11 +14,13 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.viewModelScope
 import com.example.nerdguesser.model.classes.GameData
 import com.example.nerdguesser.model.repository.GameDataRepository
 import com.example.nerdguesser.model.repository.ImageDataRepository
 import com.example.nerdguesser.view.components.buttons.Status
+import com.google.api.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -137,7 +140,7 @@ class GuessingGameViewModel @Inject constructor(
     }
 
     //TODO: Change so it's proper share functionality and not just copying
-    fun shareResults(gameName: String): AnnotatedString {
+    private fun getResultsString(gameName: String): AnnotatedString {
         var results = "NerdGuesser - $gameName #${_uiState.value.gameData.day}\n🤓 "
         val correctIndex = if (_uiState.value.isCorrect) _uiState.value.guesses.size - 1 else 6
         for (i: Int in 0 until 6){
@@ -149,6 +152,19 @@ class GuessingGameViewModel @Inject constructor(
                 "⬛ "
         }
         return AnnotatedString(results)
+    }
+
+    fun getResultsIntent(gameName: String): Intent{
+        val results = getResultsString(gameName)
+
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, results)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        return shareIntent
     }
 
     private fun enableRemaining(){
@@ -182,4 +198,5 @@ class GuessingGameViewModel @Inject constructor(
         userGuess = TextFieldValue()
         _uiState.update { it.copy(filteredResults = emptyList()) }
     }
+
 }

@@ -20,6 +20,7 @@ import com.example.nerdguesser.R
 import com.example.nerdguesser.view.components.buttons.GuessesButton
 import com.example.nerdguesser.view.components.buttons.ShareButton
 
+//TODO: Add a bit of motion
 @Composable
 fun ResultsSection(
     correct: Boolean,

@@ -3,6 +3,7 @@ package com.example.nerdguesser.model.datasource
 import android.util.Log
 import com.example.nerdguesser.model.classes.GameData
 import com.example.nerdguesser.model.utils.GameDataUtil
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -34,5 +35,29 @@ class GameDataDataSource @Inject constructor(
         val gameData = GameDataUtil.documentToGameData(document)
         Log.d("Anime", "Datasource: $gameData")
         return gameData
+    }
+
+    //-1 represents failed guesses
+    fun updateGameGuesses(id: String, guesses: Int){
+        val field = getFieldFromGuess(guesses)
+        val documentRef = firestore.collection("AnimeFrameGuesser").document(id)
+        Log.d("Anime", "Attempting to update $id\n$documentRef")
+        documentRef.update(field, FieldValue.increment(1), "totalGuesses", FieldValue.increment(1))
+            .addOnSuccessListener { Log.d("Anime", "Updated $id successfully!") }
+            .addOnFailureListener { Log.d("Anime", "Failed to update $id :(") }
+    }
+
+    private fun getFieldFromGuess(guesses: Int): String{
+        return when(guesses){
+            -1 -> "failedGuesses"
+            1 -> "firstFrameGuesses"
+            2 -> "secondFrameGuesses"
+            3 -> "thirdFrameGuesses"
+            4 -> "fourthFrameGuesses"
+            5 -> "fifthFrameGuesses"
+            6 -> "sixthFrameGuesses"
+            //Figure out how to properly handle an incorrect number
+            else -> "failedGuesses"
+        }
     }
 }

@@ -14,13 +14,11 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.viewModelScope
 import com.example.nerdguesser.model.classes.GameData
 import com.example.nerdguesser.model.repository.GameDataRepository
 import com.example.nerdguesser.model.repository.ImageDataRepository
 import com.example.nerdguesser.view.components.buttons.Status
-import com.google.api.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -86,11 +84,17 @@ class GuessingGameViewModel @Inject constructor(
         filterResults()
     }
 
+    //
     fun checkUserGuess(){
         val correct = userGuess.text.trim().equals(correctAnswer, ignoreCase = true)
         val gameOver = _uiState.value.remainingGuesses == 1
 
         addGuess(correct)
+
+        if(gameOver || correct){
+            Log.d("Anime", "Gameover is $gameOver")
+            onGameOver(correct)
+        }
 
         if (correct){
             enableRemaining()
@@ -111,6 +115,22 @@ class GuessingGameViewModel @Inject constructor(
             }
         }
         resetGuess()
+    }
+
+    private fun onGameOver(correct: Boolean){
+        val guesses = if(correct) _uiState.value.guesses.size else -1
+        updateGuesses(guesses)
+        //saveUserAttempt(correct = correct, guesses = guesses)
+
+    }
+
+    private fun updateGuesses(guesses: Int){
+        Log.d("Anime", "Game over. Updating firebase.")
+        gameDataRepository.updateGameGuesses(id = gameData.id, guesses = guesses)
+    }
+
+    private fun saveUserAttempt(correct: Boolean, guesses: Int){
+        TODO()
     }
 
     //TODO: Add a no redo thing

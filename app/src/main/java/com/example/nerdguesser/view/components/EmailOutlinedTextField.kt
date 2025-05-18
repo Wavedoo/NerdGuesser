@@ -1,5 +1,6 @@
 package com.example.nerdguesser.view.components
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Visibility
@@ -20,37 +21,27 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 
 @Composable
-fun PasswordOutlinedTextField(
+fun EmailOutlinedTextField(
     modifier: Modifier,
     label: String,
     isError: Boolean = false,
     supportingText: String = "",
 ){
     //TODO: Change remembers to remembersaveable?
-    var password by rememberSaveable { mutableStateOf("") }
-    var passwordHidden by rememberSaveable { mutableStateOf(true) }
+    var email by rememberSaveable { mutableStateOf("") }
 
     OutlinedTextField(
         modifier = modifier,
-        value = password,
+        value = email,
         label = { Text(label) },
-        onValueChange = {password = it},
-        visualTransformation = if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+        onValueChange = {email = it},
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            //TODO: Maybe change this to something that logs in when pressed?
-            imeAction = ImeAction.Done
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
         ),
-        trailingIcon = {
-            IconButton(onClick = {passwordHidden = !passwordHidden}){
-                Icon(
-                    imageVector = if(passwordHidden) Icons.Rounded.Visibility else Icons.Rounded.VisibilityOff,
-                    contentDescription = "show or hide password"
-                )
-            }
-        },
         isError = isError,
         supportingText = { Text(supportingText) }
     )

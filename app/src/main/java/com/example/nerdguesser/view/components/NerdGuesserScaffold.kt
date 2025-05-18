@@ -3,6 +3,8 @@ package com.example.nerdguesser.view.components
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.Help
+import androidx.compose.material.icons.rounded.Help
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,9 +55,10 @@ fun NerdGuesserScaffold(
                     }
                 },
                 actions = {
+                    //TODO: Make this a parameter so each screen can have its own icon
                     IconButton(onClick = {}) {
                         Icon(
-                            imageVector = Icons.Rounded.Search,
+                            imageVector = Icons.AutoMirrored.Rounded.Help,
                             contentDescription = stringResource(R.string.help_button)
                         )
                     }

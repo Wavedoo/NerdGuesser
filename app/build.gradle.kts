@@ -54,6 +54,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    //Why is it not 1.8.1. like the rest of them?
+    //Use R8/proguard or something when I am done with this, because this is a big library.
+    implementation(libs.androidx.material.icons)
 
     //Navigation
     implementation(libs.navigation.compose)

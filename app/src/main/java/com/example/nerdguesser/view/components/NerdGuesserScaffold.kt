@@ -19,6 +19,7 @@ import com.example.nerdguesser.R
 
 
 //TODO: add more paramaters
+//Using scaffold cause I suck at UI/UX design
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NerdGuesserScaffold(

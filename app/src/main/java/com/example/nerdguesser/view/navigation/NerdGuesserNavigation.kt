@@ -4,30 +4,36 @@ import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.nerdguesser.model.classes.GameData
-import com.example.nerdguesser.model.utils.GameDataUtil
 import com.example.nerdguesser.view.screens.AnimeListScreen
 import com.example.nerdguesser.view.screens.GuessAnimeScreen
+import com.example.nerdguesser.view.screens.SignInScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
-object AnimeGuesserList
+object SignInRoute
 
 @Serializable
-data class AnimeGuesserGame(val id: String)
+object AnimeGuesserListRoute
 
+@Serializable
+data class AnimeGuesserGameRoute(val id: String)
+
+fun NavGraphBuilder.signIn(){
+    composable<SignInRoute> {
+        SignInScreen()
+    }
+}
 
 fun NavGraphBuilder.animeGuesserList(onNavigateToGame: (String) -> Unit = {}){
-    composable<AnimeGuesserList> {
+    composable<AnimeGuesserListRoute> {
         AnimeListScreen(onCardClick = onNavigateToGame)
     }
 }
 
 fun NavGraphBuilder.animeGuesserGame(){
-    composable<AnimeGuesserGame> {backStackEntry ->
-        val animeGuesserGame: AnimeGuesserGame = backStackEntry.toRoute()
+    composable<AnimeGuesserGameRoute> { backStackEntry ->
+        val animeGuesserGame: AnimeGuesserGameRoute = backStackEntry.toRoute()
         Log.d("Anime", "animeGuesserGame: ${animeGuesserGame.id}")
         GuessAnimeScreen(id = animeGuesserGame.id)
     }
@@ -45,5 +51,5 @@ fun NavController.navigateToGame(id: String){
     //dataTest.id = id
     Log.d("Anime", "navigateToGame is $id\n" +
             "Called form ...")
-    navigate(AnimeGuesserGame(id = id))
+    navigate(AnimeGuesserGameRoute(id = id))
 }

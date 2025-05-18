@@ -1,14 +1,14 @@
 package com.example.nerdguesser.view.screens
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.nerdguesser.ui.theme.NerdGuesserTheme
 import com.example.nerdguesser.view.navigation.animeGuesserGame
-import com.example.nerdguesser.view.navigation.AnimeGuesserList
+import com.example.nerdguesser.view.navigation.SignInRoute
 import com.example.nerdguesser.view.navigation.animeGuesserList
 import com.example.nerdguesser.view.navigation.navigateToGame
+import com.example.nerdguesser.view.navigation.signIn
 
 @Composable
 fun NerdGuesserApp(){
@@ -17,7 +17,8 @@ fun NerdGuesserApp(){
         //GuessAnimeScreen("test")
         //LoadingScaffold()
         //TestScreen()
-        NavHost(navController, startDestination = AnimeGuesserList){
+        NavHost(navController, startDestination = SignInRoute){
+            signIn()
             animeGuesserList(onNavigateToGame = {
                 navController.navigateToGame(it)
             })

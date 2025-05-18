@@ -8,10 +8,14 @@ import androidx.navigation.toRoute
 import com.example.nerdguesser.view.screens.AnimeListScreen
 import com.example.nerdguesser.view.screens.GuessAnimeScreen
 import com.example.nerdguesser.view.screens.SignInScreen
+import com.example.nerdguesser.view.screens.SignUpScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
 object SignInRoute
+
+@Serializable
+object SignUpRoute
 
 @Serializable
 object AnimeGuesserListRoute
@@ -22,6 +26,12 @@ data class AnimeGuesserGameRoute(val id: String)
 fun NavGraphBuilder.signIn(){
     composable<SignInRoute> {
         SignInScreen()
+    }
+}
+
+fun NavGraphBuilder.signUp(){
+    composable<SignUpRoute> {
+        SignUpScreen()
     }
 }
 

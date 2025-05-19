@@ -24,19 +24,20 @@ import androidx.compose.ui.text.input.VisualTransformation
 @Composable
 fun PasswordOutlinedTextField(
     modifier: Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
     label: String,
     isError: Boolean = false,
     supportingText: String = "",
 ){
     //TODO: Change remembers to remembersaveable?
-    var password by rememberSaveable { mutableStateOf("") }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
     OutlinedTextField(
         modifier = modifier,
-        value = password,
+        value = value,
         label = { Text(label) },
-        onValueChange = {password = it},
+        onValueChange = onValueChange,
         visualTransformation = if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,

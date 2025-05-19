@@ -10,6 +10,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -26,11 +31,13 @@ fun SignInScreen(
     navigateToHome: () -> Unit,
     navigateToSignUp: () -> Unit,
 ){
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+
     NerdGuesserScaffold(
         title = "Nerd Guesser",
         onBackClick = {}
     ) { innerPadding ->
-        //w
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -38,8 +45,18 @@ fun SignInScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "Log in", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(32.dp))
-            EmailOutlinedTextField(label = "email", modifier = Modifier.padding(8.dp))
-            PasswordOutlinedTextField(label = "Password", modifier = Modifier.padding(8.dp))
+            EmailOutlinedTextField(
+                modifier = Modifier.padding(8.dp),
+                label = "email",
+                value = email,
+                onValueChange = {email = it}
+            )
+            PasswordOutlinedTextField(
+                modifier = Modifier.padding(8.dp),
+                label = "Password",
+                value = password,
+                onValueChange = {password = it}
+            )
             GenericButton(text = "Sign in", onClick = {})
             TextButton(
                 onClick = navigateToSignUp

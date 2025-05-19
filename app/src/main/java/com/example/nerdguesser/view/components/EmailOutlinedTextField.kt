@@ -26,18 +26,17 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun EmailOutlinedTextField(
     modifier: Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
     label: String,
     isError: Boolean = false,
     supportingText: String = "",
 ){
-    //TODO: Change remembers to remembersaveable?
-    var email by rememberSaveable { mutableStateOf("") }
-
     OutlinedTextField(
         modifier = modifier,
-        value = email,
+        value = value,
         label = { Text(label) },
-        onValueChange = {email = it},
+        onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Next

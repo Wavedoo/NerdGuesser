@@ -17,7 +17,9 @@ import com.example.nerdguesser.view.components.PasswordOutlinedTextField
 import com.example.nerdguesser.view.components.buttons.GenericButton
 
 @Composable
-fun SignUpScreen(){
+fun SignUpScreen(
+    navigateToSignIn: () -> Unit
+){
     NerdGuesserScaffold(
         title = "Nerd Guesser",
         onBackClick = {}
@@ -35,7 +37,7 @@ fun SignUpScreen(){
             PasswordOutlinedTextField(label = "Confirm password ", supportingText = "*required", modifier = Modifier.padding(8.dp))
             GenericButton(text = "Sign up", onClick = {})
             TextButton(
-                onClick = {}
+                onClick = navigateToSignIn
             ) {
                 Text("Already have an account?\nClick here to log in!", textAlign = TextAlign.Center)
             }

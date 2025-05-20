@@ -1,5 +1,7 @@
 package com.example.nerdguesser.model.injection
 
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -18,4 +20,6 @@ object FirebaseHiltModule {
     @Provides fun firestore(): FirebaseFirestore = Firebase.firestore
 
     @Provides fun storage(): FirebaseStorage = Firebase.storage
+
+    @Provides fun auth(): FirebaseAuth = Firebase.auth
 }

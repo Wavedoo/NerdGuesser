@@ -29,6 +29,7 @@ fun PasswordOutlinedTextField(
     label: String,
     isError: Boolean = false,
     supportingText: String = "",
+    imeAction: ImeAction = ImeAction.Done
 ){
     //TODO: Change remembers to remembersaveable?
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
@@ -42,7 +43,7 @@ fun PasswordOutlinedTextField(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
             //TODO: Maybe change this to something that logs in when pressed?
-            imeAction = ImeAction.Done
+            imeAction = imeAction
         ),
         trailingIcon = {
             IconButton(onClick = {passwordHidden = !passwordHidden}){

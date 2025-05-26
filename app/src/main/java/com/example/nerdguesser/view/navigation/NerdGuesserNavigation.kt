@@ -11,6 +11,7 @@ import com.example.nerdguesser.view.screens.AnimeListScreen
 import com.example.nerdguesser.view.screens.GuessAnimeScreen
 import com.example.nerdguesser.view.screens.SignInScreen
 import com.example.nerdguesser.view.screens.SignUpScreen
+import com.example.nerdguesser.view.screens.UserInfoTestScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,6 +19,9 @@ object SignInRoute
 
 @Serializable
 object SignUpRoute
+
+@Serializable
+object UserInfoTestRoute
 
 @Serializable
 object AnimeGuesserListRoute
@@ -41,13 +45,22 @@ fun NavGraphBuilder.signIn(
 }
 
 fun NavGraphBuilder.signUp(
-    navigateToSignIn: () -> Unit
+    navigateToSignIn: () -> Unit,
+    navigateToUserInfo: () -> Unit
 ){
     composable<SignUpRoute> {
-        SignUpScreen(navigateToSignIn = navigateToSignIn)
+        SignUpScreen(navigateToSignIn = navigateToSignIn, navigateToHome = navigateToUserInfo)
     }
 }
 
+fun NavGraphBuilder.userInfoTest(
+    onSignOut: () -> Unit,
+    onNavigateToList: () -> Unit
+){
+    composable<UserInfoTestRoute> {
+        UserInfoTestScreen(onSignOut = onSignOut, navigateToGames = onNavigateToList)
+    }
+}
 fun NavGraphBuilder.animeGuesserList(onNavigateToGame: (String) -> Unit = {}){
     composable<AnimeGuesserListRoute> {
         AnimeListScreen(onCardClick = onNavigateToGame)
@@ -78,6 +91,16 @@ fun NavController.navigateToSignIn(){
 fun NavController.navigateToSignUp(){
     navigate(SignUpRoute){ launchSingleTop = true}
 }
+
+fun NavController.navigateToUserInfo(){
+    navigate(
+        route = UserInfoTestRoute,
+        navOptions = navOptions {
+            popUpTo(0)
+        }
+    )
+}
+
 fun NavController.navigateToList(){
     navigate(
         route = AnimeGuesserListRoute,

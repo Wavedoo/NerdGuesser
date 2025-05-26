@@ -1,5 +1,6 @@
 package com.example.nerdguesser.view.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,14 +31,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 @Composable
 fun SignUpScreen(
     navigateToSignIn: () -> Unit,
+    navigateToHome: () -> Unit,
     signUpViewModel: SignUpViewModel = hiltViewModel()
 ){
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("test@test.com") }
+    var password by rememberSaveable { mutableStateOf("animes") }
+    var confirmPassword by rememberSaveable { mutableStateOf("animes") }
 
     val signUpUiState by signUpViewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
+    if(signUpViewModel.isSignedIn()){
+        navigateToHome()
+    }
     NerdGuesserScaffold(
         title = "Nerd Guesser",
         onBackClick = {}
@@ -62,7 +70,8 @@ fun SignUpScreen(
                 isError = signUpUiState.passwordError,
                 supportingText = if (!signUpUiState.passwordError) "*required" else signUpUiState.passwordErrorMessage,
                 value = password,
-                onValueChange = {password = it}
+                onValueChange = {password = it},
+                imeAction = ImeAction.Next
             )
             PasswordOutlinedTextField(
                 modifier = Modifier.padding(8.dp),
@@ -74,7 +83,11 @@ fun SignUpScreen(
             )
             GenericButton(
                 text = "Sign up",
-                onClick = {signUpViewModel.signUp(email, password, confirmPassword)}
+                onClick = {
+                    signUpViewModel.signUp(email, password, confirmPassword, navigateToHome) {
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    }
+                }
             )
             TextButton(
                 onClick = navigateToSignIn

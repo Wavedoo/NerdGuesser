@@ -12,8 +12,10 @@ import com.example.nerdguesser.view.navigation.navigateToGame
 import com.example.nerdguesser.view.navigation.navigateToList
 import com.example.nerdguesser.view.navigation.navigateToSignIn
 import com.example.nerdguesser.view.navigation.navigateToSignUp
+import com.example.nerdguesser.view.navigation.navigateToUserInfo
 import com.example.nerdguesser.view.navigation.signIn
 import com.example.nerdguesser.view.navigation.signUp
+import com.example.nerdguesser.view.navigation.userInfoTest
 
 @Composable
 fun NerdGuesserApp(){
@@ -24,11 +26,16 @@ fun NerdGuesserApp(){
         //TestScreen()
         NavHost(navController, startDestination = SignUpRoute){
             signIn(
-                navigateToHome = { navController.navigateToList() },
+                navigateToHome = { navController.navigateToUserInfo() },
                 navigateToSignUp = {navController.navigateToSignUp()}
             )
             signUp(
-                navigateToSignIn = {navController.navigateToSignIn()}
+                navigateToSignIn = {navController.navigateToSignIn()},
+                navigateToUserInfo = {navController.navigateToUserInfo()}
+            )
+            userInfoTest(
+                onSignOut = { navController.navigateToSignIn() },
+                onNavigateToList = {navController.navigateToList()}
             )
             animeGuesserList(onNavigateToGame = {
                 navController.navigateToGame(it)

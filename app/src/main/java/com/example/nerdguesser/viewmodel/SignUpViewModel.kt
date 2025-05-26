@@ -1,11 +1,12 @@
 package com.example.nerdguesser.viewmodel
 
-import android.provider.ContactsContract.CommonDataKinds.Email
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nerdguesser.model.repository.AuthRepository
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +21,20 @@ class SignUpViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SignUpUiState())
     val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()
 
-    fun signUp(email: String, password: String, confirmPassword: String){
+    //val userState: Flow<FirebaseUser?> = authRepository.currentUser
+
+/*    init {
+        //Testing purposes
+        authRepository.signOut()
+    }*/
+
+    fun signUp(
+        email: String,
+        password: String,
+        confirmPassword: String,
+        onSignUpSuccessful: () -> Unit,
+        showToast: (String) -> Unit
+    ){
         var valid = true
         if(!email.isValidEmail()){
             Log.d("Anime","Invalid email")
@@ -49,10 +63,29 @@ class SignUpViewModel @Inject constructor(
         if(!valid){
             return
         }
-        /*viewModelScope.launch {
-            authRepository.signUp(email = email, password = password, confirmPassword = confirmPassword)
-            //Relaunch app?
-        }*/
+        viewModelScope.launch {
+            Log.d("Anime", "Firebase user before sign up(): ${authRepository.currentUser}")
+            updateLoading(true)
+            authRepository.signUp(email = email, password = password)
+            updateLoading(false)
+            Log.d("Anime", "Firebase user after sign up(): ${authRepository.currentUser}")
+
+            //Has the user successfully signed in?
+            if (authRepository.currentUser != null){
+                showToast("Sign up successful!")
+                onSignUpSuccessful()
+            }else{
+                showToast("Sign up failed!")
+            }
+        }
     }
 
+    private fun updateLoading(isLoading: Boolean) {
+        _uiState.update {
+            it.copy(isLoading = isLoading)
+        }
+    }
+    fun isSignedIn(): Boolean{
+        return authRepository.currentUser != null
+    }
 }

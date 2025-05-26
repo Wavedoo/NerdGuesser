@@ -20,19 +20,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.nerdguesser.view.components.EmailOutlinedTextField
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
 import com.example.nerdguesser.view.components.PasswordOutlinedTextField
 import com.example.nerdguesser.view.components.buttons.GenericButton
+import com.example.nerdguesser.viewmodel.SignInViewModel
 
 @Composable
 fun SignInScreen(
     //TODO: Figure out what home is
     navigateToHome: () -> Unit,
     navigateToSignUp: () -> Unit,
+    signInViewModel: SignInViewModel = hiltViewModel()
 ){
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+
+    val signInUiState by signInViewModel.uiState.collectAsStateWithLifecycle()
+
+    if(signInViewModel.isSignedIn()){
+        navigateToHome()
+    }
 
     NerdGuesserScaffold(
         title = "Nerd Guesser",
@@ -48,16 +58,25 @@ fun SignInScreen(
             EmailOutlinedTextField(
                 modifier = Modifier.padding(8.dp),
                 label = "email",
+                isError = signInUiState.emailError,
+                supportingText = signInUiState.emailErrorMessage,
                 value = email,
                 onValueChange = {email = it}
             )
             PasswordOutlinedTextField(
                 modifier = Modifier.padding(8.dp),
                 label = "Password",
+                isError = signInUiState.passwordError,
+                supportingText = signInUiState.passwordErrorMessage,
                 value = password,
                 onValueChange = {password = it}
             )
-            GenericButton(text = "Sign in", onClick = {})
+            GenericButton(
+                text = "Sign in",
+                onClick = {
+                    signInViewModel.signIn(email, password, navigateToHome)
+                }
+            )
             TextButton(
                 onClick = navigateToSignUp
             ) {

@@ -1,5 +1,6 @@
 package com.example.nerdguesser.view.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,8 @@ import com.example.nerdguesser.viewmodel.SignInViewModel
 import com.example.nerdguesser.viewmodel.SignUpViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 
+//TODO: Loading indicator
+
 @Composable
 fun SignUpScreen(
     navigateToSignIn: () -> Unit,
@@ -43,6 +46,7 @@ fun SignUpScreen(
 
     if(signUpViewModel.isSignedIn()){
         navigateToHome()
+        Log.d("Anime", "Currently signed in. Navigating.")
     }
     NerdGuesserScaffold(
         title = "Nerd Guesser",

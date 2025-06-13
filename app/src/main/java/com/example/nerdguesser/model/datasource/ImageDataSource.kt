@@ -1,19 +1,11 @@
 package com.example.nerdguesser.model.datasource
 
-import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import com.example.nerdguesser.R
-import com.google.api.Context
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.component1
-import com.google.firebase.storage.component2
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -22,6 +14,8 @@ class ImageDataSource @Inject constructor(
     private val storage: FirebaseStorage
 ) {
     private val FIVE_MEGABYTES: Long = 5 * 1024 * 1024
+    private val storageRef = storage.reference
+    private val animeGameStorage = storageRef.child("AnimeFrameGuesser")
 
     private suspend fun getImage(path: StorageReference): ImageBitmap {
         Log.d("Anime", "ImageDataSource.getImage()\n\tStorageReference: $path")
@@ -31,14 +25,18 @@ class ImageDataSource @Inject constructor(
         return bitmap
     }
 
-    suspend fun getImages(imageFolder: String): List<ImageBitmap>{
-        Log.d("Anime", "ImageDataSource.getImages()\n\tfolder: $imageFolder")
+    suspend fun getImages(folderName: String): List<ImageBitmap>{
+        Log.d("Anime", "ImageDataSource.getImages()\n\tfolder: $folderName")
 
-        val gsReference = storage.getReferenceFromUrl(imageFolder);
+        val folderReference = animeGameStorage.child(folderName);
+        Log.d("Anime", "FolderReference: $folderReference")
         val images: MutableList<ImageBitmap> = mutableListOf()
-        val references = gsReference.listAll().await()
+        val references = folderReference.listAll().await()
+        Log.d("Anime", "getImages.references.items = ${references.items}")
         for (ref in references.items){
+            Log.d("Anime", "ref = $ref")
             images.add(getImage(ref))
+            Log.d("Anime", "")
         }
         return images
     }

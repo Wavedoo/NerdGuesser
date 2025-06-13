@@ -5,6 +5,7 @@ import com.example.nerdguesser.model.classes.GameData
 import com.example.nerdguesser.model.utils.GameDataUtil
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
@@ -22,7 +23,7 @@ class GameDataDataSource @Inject constructor(
     }*/
 
     suspend fun getGamesList(): List<String>{
-        val document = firestore.collection("AnimeFrameDays").document("list").get().await()
+        val document = firestore.collection("AnimeInformation").document("FrameDays").get().await()
         val data = document.data!!["IDs"] as List<String>
         return data
     }
@@ -32,7 +33,8 @@ class GameDataDataSource @Inject constructor(
         /*delay(2000)
         return GameDataUtil.test*/
         val document = firestore.collection("AnimeFrameGuesser").document(id).get().await()
-        val gameData = GameDataUtil.documentToGameData(document)
+        //val gameData = GameDataUtil.documentToGameData(document)
+        val gameData = document.toObject<GameData>()!!
         Log.d("Anime", "Datasource: $gameData")
         return gameData
     }

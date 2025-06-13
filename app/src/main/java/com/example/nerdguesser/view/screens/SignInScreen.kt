@@ -28,6 +28,8 @@ import com.example.nerdguesser.view.components.PasswordOutlinedTextField
 import com.example.nerdguesser.view.components.buttons.GenericButton
 import com.example.nerdguesser.viewmodel.SignInViewModel
 
+//TODO: Loading indicator
+
 @Composable
 fun SignInScreen(
     //TODO: Figure out what home is

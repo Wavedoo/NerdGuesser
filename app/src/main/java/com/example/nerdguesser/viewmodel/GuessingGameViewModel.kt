@@ -16,6 +16,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import com.example.nerdguesser.model.classes.GameData
+import com.example.nerdguesser.model.repository.AnimeInformationRepository
 import com.example.nerdguesser.model.repository.GameDataRepository
 import com.example.nerdguesser.model.repository.ImageDataRepository
 import com.example.nerdguesser.view.components.buttons.Status
@@ -24,7 +25,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-val options = listOf(
+/*val options = listOf(
     "Naruto",
     "Naruto Shippuden",
     "Frieren",
@@ -38,13 +39,14 @@ val options = listOf(
     "Dandadan",
     "Danganronpa",
     "Danganronpa: The Animation"
-)
+)*/
 
 
 @HiltViewModel
 class GuessingGameViewModel @Inject constructor(
     private val gameDataRepository: GameDataRepository,
-    private val imageDataRepository: ImageDataRepository
+    private val imageDataRepository: ImageDataRepository,
+    private val animeInformationRepository: AnimeInformationRepository
 ) : ViewModel() {
 
     //TODO: Read this https://developer.android.com/develop/ui/compose/state-saving
@@ -53,6 +55,7 @@ class GuessingGameViewModel @Inject constructor(
 
     private lateinit var gameData: GameData
     private lateinit var correctAnswer: String
+    private lateinit var options: List<String>
 
     var userGuess by mutableStateOf(TextFieldValue())
         private set
@@ -67,6 +70,7 @@ class GuessingGameViewModel @Inject constructor(
         Log.d("Anime", "tempInit repeated call check")
         viewModelScope.launch {
             gameData = gameDataRepository.getGameData(id)
+            options = animeInformationRepository.getAnimeList()
             Log.d("Anime", "viewModelScope.launch repeated call check")
             createState()
 
@@ -75,7 +79,7 @@ class GuessingGameViewModel @Inject constructor(
 
     private suspend fun createState(){
         correctAnswer = gameData.name
-        images = imageDataRepository.getImages(gameData.imageFolder).toMutableStateList()
+        images = imageDataRepository.getImages(gameData.folderName).toMutableStateList()
         _uiState.value = GuessingGameUiState(gameData = gameData, images = images)
     }
 

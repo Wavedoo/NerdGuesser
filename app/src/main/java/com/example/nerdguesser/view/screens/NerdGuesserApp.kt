@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.nerdguesser.ui.theme.NerdGuesserTheme
+import com.example.nerdguesser.view.navigation.AnimeGuesserListRoute
 import com.example.nerdguesser.view.navigation.animeGuesserGame
 import com.example.nerdguesser.view.navigation.SignInRoute
 import com.example.nerdguesser.view.navigation.SignUpRoute
@@ -24,7 +25,7 @@ fun NerdGuesserApp(){
         //GuessAnimeScreen("test")
         //LoadingScaffold()
         //TestScreen()
-        NavHost(navController, startDestination = SignUpRoute){
+        NavHost(navController, startDestination = AnimeGuesserListRoute){
             signIn(
                 navigateToHome = { navController.navigateToUserInfo() },
                 navigateToSignUp = {navController.navigateToSignUp()}

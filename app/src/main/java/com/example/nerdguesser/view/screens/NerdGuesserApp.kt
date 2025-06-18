@@ -8,6 +8,7 @@ import com.example.nerdguesser.view.navigation.AnimeGuesserListRoute
 import com.example.nerdguesser.view.navigation.animeGuesserGame
 import com.example.nerdguesser.view.navigation.SignInRoute
 import com.example.nerdguesser.view.navigation.SignUpRoute
+import com.example.nerdguesser.view.navigation.UserInfoTestRoute
 import com.example.nerdguesser.view.navigation.animeGuesserList
 import com.example.nerdguesser.view.navigation.navigateToGame
 import com.example.nerdguesser.view.navigation.navigateToList
@@ -25,7 +26,7 @@ fun NerdGuesserApp(){
         //GuessAnimeScreen("test")
         //LoadingScaffold()
         //TestScreen()
-        NavHost(navController, startDestination = AnimeGuesserListRoute){
+        NavHost(navController, startDestination = SignInRoute){
             signIn(
                 navigateToHome = { navController.navigateToUserInfo() },
                 navigateToSignUp = {navController.navigateToSignUp()}

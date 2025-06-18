@@ -1,4 +1,4 @@
-package com.example.nerdguesser.viewmodel
+package com.example.nerdguesser.model.uistate
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.ImageBitmap

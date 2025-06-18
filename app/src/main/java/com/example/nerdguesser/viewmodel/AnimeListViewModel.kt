@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AnimeListViewModel @Inject constructor(
     private val gameDataRepository: GameDataRepository
-) : ViewModel() {
+) : MainViewModel() {
     private val _gamesList = MutableStateFlow<List<String>>(emptyList())
     val gamesList: StateFlow<List<String>> = _gamesList.asStateFlow()
 

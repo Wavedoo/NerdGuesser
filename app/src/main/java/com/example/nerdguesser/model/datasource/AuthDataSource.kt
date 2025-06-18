@@ -47,50 +47,11 @@ class AuthDataSource @Inject constructor(
 
 
     suspend fun signUp(email: String, password: String){
-        try{
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    Log.d("Anime", "Account successfully created for: ${auth.currentUser}")
-                }
-                .addOnFailureListener{
-                    Log.d("Anime", "Failure!")
-                }
-                .await()
-        }catch (e: FirebaseAuthUserCollisionException){
-            Log.d("Anime", "Account creation failed: ${e.message}")
-        }catch (e: Exception){
-            Log.d("Anime", "signUp exception: ${e.message}")
-        }
-        //Non-suspend/await
-        /*Log.d("Anime", "Create!")
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            Log.d("Anime", "Complete")
-            if (task.isSuccessful) {
-                Log.d("Anime", "Registration successful! ${Toast.LENGTH_LONG}")
-                // if the user created intent to login activity
-            } else {
-                // Registration failed
-                Log.d(
-                    "Anime",
-                    "Registration failed!!" + " ${task.exception?.message.toString()}" + Toast.LENGTH_LONG
-                )
-            }
-        }*/
+        auth.createUserWithEmailAndPassword(email, password).await()
     }
 
     suspend fun signIn(email: String, password: String){
-        try {
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    Log.d("Anime", "Signed in successfully! ${auth.currentUser}")
-                }
-                .addOnFailureListener{
-                    Log.d("Anime", "Failed to sign in!")
-                }
-                .await()
-        }catch (e: Exception){
-            Log.d("Anime", "Failed to sign in: ${e.message}")
-        }
+        auth.signInWithEmailAndPassword(email, password).await()
     }
 
     fun signOut(){

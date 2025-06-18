@@ -9,7 +9,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserInfoTestViewModel @Inject constructor(
     private val authRepository: AuthRepository
-): ViewModel() {
+): MainViewModel() {
     fun getUser(): FirebaseUser?{
         return authRepository.getUser()
     }

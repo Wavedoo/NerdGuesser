@@ -41,8 +41,8 @@ fun SignInScreen(
     var password by rememberSaveable { mutableStateOf("") }
 
     val signInUiState by signInViewModel.uiState.collectAsStateWithLifecycle()
-
-    if(signInViewModel.isSignedIn()){
+    val signedIn by signInViewModel.signedIn.collectAsStateWithLifecycle()
+    if(signedIn){
         navigateToHome()
     }
 

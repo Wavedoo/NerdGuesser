@@ -4,9 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nerdguesser.model.repository.AuthRepository
-import com.google.firebase.auth.FirebaseUser
+import com.example.nerdguesser.model.uistate.SignInUiState
+import com.example.nerdguesser.model.uistate.SignUpUiState
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWebException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,9 +20,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val authRepository: AuthRepository
-): ViewModel() {
+): MainViewModel() {
     private val _uiState = MutableStateFlow(SignUpUiState())
     val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()
+    private val _isSignedIn = MutableStateFlow(isSignedIn())
+    val signedIn = _isSignedIn.asStateFlow()
 
     //val userState: Flow<FirebaseUser?> = authRepository.currentUser
 
@@ -35,6 +40,7 @@ class SignUpViewModel @Inject constructor(
         onSignUpSuccessful: () -> Unit,
         showToast: (String) -> Unit
     ){
+        resetErrors()
         var valid = true
         if(!email.isValidEmail()){
             Log.d("Anime","Invalid email")
@@ -63,20 +69,15 @@ class SignUpViewModel @Inject constructor(
         if(!valid){
             return
         }
-        viewModelScope.launch {
+
+        launchCatching (showAuthErrorState = {displayAuthError(it)}) {
             Log.d("Anime", "Firebase user before sign up(): ${authRepository.currentUser}")
             updateLoading(true)
             authRepository.signUp(email = email, password = password)
             updateLoading(false)
             Log.d("Anime", "Firebase user after sign up(): ${authRepository.currentUser}")
 
-            //Has the user successfully signed in?
-            if (authRepository.currentUser != null){
-                showToast("Sign up successful!")
-                onSignUpSuccessful()
-            }else{
-                showToast("Sign up failed!")
-            }
+            _isSignedIn.value = true
         }
     }
 
@@ -85,7 +86,31 @@ class SignUpViewModel @Inject constructor(
             it.copy(isLoading = isLoading)
         }
     }
-    fun isSignedIn(): Boolean{
+    private fun resetErrors(){
+        _uiState.update{
+            SignUpUiState()
+        }
+    }
+
+    private fun displayAuthError(throwable: Throwable){
+        when(throwable){
+            is FirebaseAuthWebException -> _uiState.update {
+                it.copy(
+                    passwordError = true,
+                    passwordErrorMessage = "The password is not strong enough",
+                    confirmError = true,
+                    confirmErrorMessage = "The password is not strong enough"
+                )
+            }
+            is FirebaseAuthInvalidCredentialsException -> _uiState.update {
+                it.copy(emailError = true, emailErrorMessage = "The email address is malformed")
+            }
+            is FirebaseAuthUserCollisionException -> _uiState.update {
+                it.copy(emailError = true, emailErrorMessage = "The email address is already in use")
+            }
+        }
+    }
+    private fun isSignedIn(): Boolean{
         return authRepository.currentUser != null
     }
 }

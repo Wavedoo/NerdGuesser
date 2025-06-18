@@ -42,11 +42,12 @@ fun SignUpScreen(
     var confirmPassword by rememberSaveable { mutableStateOf("animes") }
 
     val signUpUiState by signUpViewModel.uiState.collectAsStateWithLifecycle()
+    val signedIn by signUpViewModel.signedIn.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    if(signUpViewModel.isSignedIn()){
-        navigateToHome()
+    if(signedIn){
         Log.d("Anime", "Currently signed in. Navigating.")
+        navigateToHome()
     }
     NerdGuesserScaffold(
         title = "Nerd Guesser",

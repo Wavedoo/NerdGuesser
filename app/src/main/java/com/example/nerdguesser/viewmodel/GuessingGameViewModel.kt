@@ -3,7 +3,6 @@ package com.example.nerdguesser.viewmodel
 import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +18,7 @@ import com.example.nerdguesser.model.classes.GameData
 import com.example.nerdguesser.model.repository.AnimeInformationRepository
 import com.example.nerdguesser.model.repository.GameDataRepository
 import com.example.nerdguesser.model.repository.ImageDataRepository
+import com.example.nerdguesser.model.uistate.GuessingGameUiState
 import com.example.nerdguesser.view.components.buttons.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
@@ -47,7 +47,7 @@ class GuessingGameViewModel @Inject constructor(
     private val gameDataRepository: GameDataRepository,
     private val imageDataRepository: ImageDataRepository,
     private val animeInformationRepository: AnimeInformationRepository
-) : ViewModel() {
+) : MainViewModel() {
 
     //TODO: Read this https://developer.android.com/develop/ui/compose/state-saving
     private val _uiState = MutableStateFlow(GuessingGameUiState())

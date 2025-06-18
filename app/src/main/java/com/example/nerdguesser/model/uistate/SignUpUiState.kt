@@ -1,4 +1,4 @@
-package com.example.nerdguesser.viewmodel
+package com.example.nerdguesser.model.uistate
 
 data class SignUpUiState(
     val isLoading: Boolean = false,

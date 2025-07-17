@@ -1,6 +1,5 @@
 package com.example.nerdguesser.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nerdguesser.model.repository.GameDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AnimeListViewModel @Inject constructor(
     private val gameDataRepository: GameDataRepository
-) : MainViewModel() {
+) : BaseViewModel() {
     private val _gamesList = MutableStateFlow<List<String>>(emptyList())
     val gamesList: StateFlow<List<String>> = _gamesList.asStateFlow()
 

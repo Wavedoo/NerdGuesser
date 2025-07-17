@@ -47,7 +47,7 @@ class GuessingGameViewModel @Inject constructor(
     private val gameDataRepository: GameDataRepository,
     private val imageDataRepository: ImageDataRepository,
     private val animeInformationRepository: AnimeInformationRepository
-) : MainViewModel() {
+) : BaseViewModel() {
 
     //TODO: Read this https://developer.android.com/develop/ui/compose/state-saving
     private val _uiState = MutableStateFlow(GuessingGameUiState())

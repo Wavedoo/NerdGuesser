@@ -10,11 +10,15 @@ import com.example.nerdguesser.view.navigation.SignInRoute
 import com.example.nerdguesser.view.navigation.SignUpRoute
 import com.example.nerdguesser.view.navigation.UserInfoTestRoute
 import com.example.nerdguesser.view.navigation.animeGuesserList
+import com.example.nerdguesser.view.navigation.homeScreen
 import com.example.nerdguesser.view.navigation.navigateToGame
+import com.example.nerdguesser.view.navigation.navigateToHome
 import com.example.nerdguesser.view.navigation.navigateToList
+import com.example.nerdguesser.view.navigation.navigateToSettings
 import com.example.nerdguesser.view.navigation.navigateToSignIn
 import com.example.nerdguesser.view.navigation.navigateToSignUp
 import com.example.nerdguesser.view.navigation.navigateToUserInfo
+import com.example.nerdguesser.view.navigation.settingsScreen
 import com.example.nerdguesser.view.navigation.signIn
 import com.example.nerdguesser.view.navigation.signUp
 import com.example.nerdguesser.view.navigation.userInfoTest
@@ -28,7 +32,7 @@ fun NerdGuesserApp(){
         //TestScreen()
         NavHost(navController, startDestination = SignInRoute){
             signIn(
-                navigateToHome = { navController.navigateToUserInfo() },
+                navigateToHome = { navController.navigateToHome() },
                 navigateToSignUp = {navController.navigateToSignUp()}
             )
             signUp(
@@ -43,6 +47,13 @@ fun NerdGuesserApp(){
                 navController.navigateToGame(it)
             })
             animeGuesserGame()
+            homeScreen(
+                onNavigateToList = { navController.navigateToList() },
+                onNavigateToSettings = {navController.navigateToSettings()}
+            )
+            settingsScreen(
+                onSignOut = {navController.navigateToSignIn()}
+            )
             //nerdGuesserNavGraph(onGameSelected = {navController.navigateToGameTest("test")})
         }
     }

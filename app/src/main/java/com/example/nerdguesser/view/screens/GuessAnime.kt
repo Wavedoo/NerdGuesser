@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Help
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -57,7 +61,15 @@ fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltView
     val title = if (gameUiState.gameData.day != 0) stringResource(R.string.anime_number, gameUiState.gameData.day) else "Anime Guesser"
     NerdGuesserScaffold(
         title = title,
-        onBackClick = {/* gameViewModel.getAnswerDetails()*/ }
+        onBackClick = {/* gameViewModel.getAnswerDetails()*/ },
+        actionIconButton = {
+            IconButton(onClick = {/*TODO: Add a help modal*/}) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.Help,
+                    contentDescription = stringResource(R.string.help_button)
+                )
+            }
+        }
     ) {
         innerPadding ->
         //The game is ready to be played

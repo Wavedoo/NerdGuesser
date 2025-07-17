@@ -6,11 +6,28 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuthException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 //Taken from https://github.com/FirebaseExtended/make-it-so-android/tree/5c3b28c04f7582c7e60b30f3693d770b46819646/v2
 //and modified
-open class MainViewModel: ViewModel() {
+open class BaseViewModel: ViewModel() {
+    private val _snackbarEvents = MutableSharedFlow<String>()
+    val snackbarEvents = _snackbarEvents.asSharedFlow()
+
+    //Anything after a throwable does not execute.
+    fun launchCatching(
+        updateUiState: (Throwable) -> Unit = {},
+        block: suspend CoroutineScope.() -> Unit
+    ) =
+        viewModelScope.launch(
+            CoroutineExceptionHandler { _, throwable ->
+                Log.d("Anime", "Throwable thrown: ${throwable.message}")
+                updateUiState(throwable)
+            },
+            block = block
+        )
 
     //Anything after a throwable does not execute.
     fun launchCatching(

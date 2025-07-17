@@ -1,21 +1,23 @@
 package com.example.nerdguesser.view.components
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.Help
-import androidx.compose.material.icons.rounded.Help
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.example.nerdguesser.R
 
@@ -26,10 +28,15 @@ import com.example.nerdguesser.R
 @Composable
 fun NerdGuesserScaffold(
     title: String,
+    hostState: SnackbarHostState = remember { SnackbarHostState() },
     onBackClick: () -> Unit, /*Only for testing*/
+    actionIconButton: @Composable RowScope.() -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ){
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = hostState)
+        },
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarColors(
@@ -54,7 +61,8 @@ fun NerdGuesserScaffold(
                         )
                     }
                 },
-                actions = {
+                actions = actionIconButton
+                /*actions = {
                     //TODO: Make this a parameter so each screen can have its own icon
                     IconButton(onClick = {}) {
                         Icon(
@@ -62,7 +70,7 @@ fun NerdGuesserScaffold(
                             contentDescription = stringResource(R.string.help_button)
                         )
                     }
-                }
+                }*/
             )
         },
         content = content

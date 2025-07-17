@@ -1,19 +1,20 @@
 package com.example.nerdguesser.viewmodel
 
 import com.example.nerdguesser.model.repository.AuthRepository
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class UserInfoTestViewModel @Inject constructor(
+class SettingsViewModel @Inject constructor(
     private val authRepository: AuthRepository
-): BaseViewModel() {
-    fun getUser(): FirebaseUser?{
-        return authRepository.getUser()
-    }
+): BaseViewModel(){
+    private val _isSignedIn = MutableStateFlow(true)
+    val signedIn = _isSignedIn.asStateFlow()
 
     fun signOut(){
         authRepository.signOut()
+        _isSignedIn.value = false
     }
 }

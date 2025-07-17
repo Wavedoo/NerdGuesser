@@ -1,10 +1,7 @@
 package com.example.nerdguesser.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.nerdguesser.model.repository.AuthRepository
-import com.example.nerdguesser.model.uistate.SignInUiState
 import com.example.nerdguesser.model.uistate.SignUpUiState
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -14,13 +11,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val authRepository: AuthRepository
-): MainViewModel() {
+): BaseViewModel() {
     private val _uiState = MutableStateFlow(SignUpUiState())
     val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()
     private val _isSignedIn = MutableStateFlow(isSignedIn())
@@ -45,7 +41,7 @@ class SignUpViewModel @Inject constructor(
         if(!email.isValidEmail()){
             Log.d("Anime","Invalid email")
             _uiState.update {
-                it.copy(emailError = true, emailErrorMessage = "Invalid email")
+                it.copy(emailError = true, emailErrorMessage = "Invalid email", snackbarError = "Invalid email format.")
             }
             valid = false
         }
@@ -61,7 +57,12 @@ class SignUpViewModel @Inject constructor(
         if(!password.equals(confirmPassword, ignoreCase = false)){
             Log.d("Anime", "Passwords do not match")
             _uiState.update {
-                it.copy(confirmError = true, confirmErrorMessage = "Passwords do not match")
+                it.copy(
+                    passwordError = true,
+                    passwordErrorMessage = "Passwords do not match",
+                    confirmError = true,
+                    confirmErrorMessage = "Passwords do not match"
+                )
             }
             valid= false
         }
@@ -70,7 +71,7 @@ class SignUpViewModel @Inject constructor(
             return
         }
 
-        launchCatching (showAuthErrorState = {displayAuthError(it)}) {
+        launchCatching (showAuthErrorState = ::displayAuthError) {
             Log.d("Anime", "Firebase user before sign up(): ${authRepository.currentUser}")
             updateLoading(true)
             authRepository.signUp(email = email, password = password)
@@ -99,7 +100,8 @@ class SignUpViewModel @Inject constructor(
                     passwordError = true,
                     passwordErrorMessage = "The password is not strong enough",
                     confirmError = true,
-                    confirmErrorMessage = "The password is not strong enough"
+                    confirmErrorMessage = "The password is not strong enough",
+                    snackbarError = "Passwo"
                 )
             }
             is FirebaseAuthInvalidCredentialsException -> _uiState.update {

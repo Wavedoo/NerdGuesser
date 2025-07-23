@@ -65,8 +65,6 @@ fun CarouselGames(){
         }
     }
 
-    val game2 = games[lazyListState.selectedItemIndex % games.size]
-
     Text("${lazyListState.selectedItemIndex % games.size + 1} / ${games.size}")
 
     GameWheel(
@@ -74,16 +72,6 @@ fun CarouselGames(){
         games = games
     )
 
-/*    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        state = lazyListState,
-        flingBehavior = snapBehavior
-    ) {
-        items(Int.MAX_VALUE) { index ->
-            val game = games[index % games.size]
-            CarouselImage(game.imageId, game.gameTitle, game.contentDescription)
-        }
-    }*/
     Text(game.gameTitle)
     Text(game.gameDescription)
 }

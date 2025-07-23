@@ -31,20 +31,13 @@ fun GameWheel(
     lazyListState: LazyListState,
     games: List<CarouselItem>
 ){
-    Log.d("Anime", "LazyListState: $lazyListState")
     val snapBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState)
-    Log.d("Anime", "snapBehavior: $snapBehavior")
-
 
     //TODO: Figure out why lazyliststate is causes multiople recompositions and/or ifit's oaky
     //TODO: Worry about centering the first item later.
-/*    LaunchedEffect(Unit) {
-        lazyListState.animateScrollToItem(4)
-    }*/
-    val testState = rememberLazyListState()
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        state = testState,
+        state = lazyListState,
         flingBehavior = snapBehavior
     ) {
         items(Int.MAX_VALUE) { index ->
@@ -52,9 +45,4 @@ fun GameWheel(
             CarouselImage(game.imageId, game.gameTitle, game.contentDescription)
         }
     }
-/*    Row {
-        games.forEach {
-            CarouselImage(it.imageId, it.gameTitle, it.contentDescription)
-        }
-    }*/
 }

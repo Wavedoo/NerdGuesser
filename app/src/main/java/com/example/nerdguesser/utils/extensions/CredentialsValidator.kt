@@ -1,4 +1,4 @@
-package com.example.nerdguesser.viewmodel
+package com.example.nerdguesser.utils.extensions
 
 import android.util.Patterns
 import java.util.regex.Pattern

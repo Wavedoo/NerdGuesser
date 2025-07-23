@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.nerdguesser.view.components.CarouselGames
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
 import com.example.nerdguesser.view.components.buttons.GenericButton
 import com.example.nerdguesser.viewmodel.HomeViewModel
@@ -43,10 +44,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            GenericButton(
-                text = "Games",
-                onClick = navigateToGames
-            )
+            CarouselGames()
             Text("Stats go here.")
         }
     }

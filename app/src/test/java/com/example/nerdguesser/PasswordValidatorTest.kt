@@ -1,6 +1,6 @@
 package com.example.nerdguesser
 
-import com.example.nerdguesser.viewmodel.isValidPassword
+import com.example.nerdguesser.utils.extensions.isValidPassword
 import org.junit.Assert.assertFalse
 import org.junit.Test
 import org.junit.Assert.assertTrue

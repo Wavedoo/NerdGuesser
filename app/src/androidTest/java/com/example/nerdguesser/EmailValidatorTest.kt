@@ -1,7 +1,7 @@
 package com.example.nerdguesser
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.nerdguesser.viewmodel.isValidEmail
+import com.example.nerdguesser.utils.extensions.isValidEmail
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test

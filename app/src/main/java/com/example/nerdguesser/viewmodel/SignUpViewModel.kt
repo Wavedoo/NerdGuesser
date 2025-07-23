@@ -1,6 +1,8 @@
 package com.example.nerdguesser.viewmodel
 
 import android.util.Log
+import com.example.nerdguesser.utils.extensions.isValidEmail
+import com.example.nerdguesser.utils.extensions.isValidPassword
 import com.example.nerdguesser.model.repository.AuthRepository
 import com.example.nerdguesser.model.uistate.SignUpUiState
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException

@@ -3,7 +3,7 @@ NerdGuesser is an app meant to have daily games (like Wordle) that are bawsed on
 I am developing this as a means for improving my Android development skills using Jetpack Compose, and to hopefully satitate my desire for my nerdy daily guessing games.
 
 ## Related Links
-Quick website that only lets you play the daily game and use the stored words:
+Quick website lacking in CSS and other important features:
 [NerdGuesser Website](https://nerdguesser.web.app/index.html)
 
 Cloud functions for Firebase:

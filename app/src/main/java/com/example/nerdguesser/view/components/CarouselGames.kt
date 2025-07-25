@@ -53,25 +53,9 @@ fun CarouselGames(){
             contentDescription = "",
         )
     )
-    //Makes sure to start on the first in the list.
-    var index = Int.MAX_VALUE / 2
-    index -= index % games.size
-    val lazyListState = rememberLazyListState(index)
 
-    val game by remember {
-        derivedStateOf {
-            Log.d("Anime", "Selected item index updated: ${lazyListState.selectedItemIndex}")
-            games[lazyListState.selectedItemIndex % games.size]
-        }
-    }
-
-    Text("${lazyListState.selectedItemIndex % games.size + 1} / ${games.size}")
 
     GameWheel(
-        lazyListState = lazyListState,
         games = games
     )
-
-    Text(game.gameTitle)
-    Text(game.gameDescription)
 }

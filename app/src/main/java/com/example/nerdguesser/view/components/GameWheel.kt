@@ -1,25 +1,18 @@
 package com.example.nerdguesser.view.components
 
 import android.util.Log
-import androidx.compose.foundation.gestures.FlingBehavior
-import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.carousel.CarouselDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.nerdguesser.model.classes.CarouselItem
-import kotlinx.coroutines.coroutineScope
+import com.example.nerdguesser.utils.extensions.selectedItemIndex
 
 /*
 This dosen't need to be a wheel at all,
@@ -28,12 +21,24 @@ But I did it because I could.
 */
 @Composable
 fun GameWheel(
-    lazyListState: LazyListState,
     games: List<CarouselItem>
 ){
+    //Makes sure to start on the first in the list.
+    var index = Int.MAX_VALUE / 2
+    index -= index % games.size
+    val lazyListState = rememberLazyListState(index)
     val snapBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState)
 
-    //TODO: Figure out why lazyliststate is causes multiople recompositions and/or ifit's oaky
+
+    val currentGame by remember {
+        derivedStateOf {
+            Log.d("Anime", "Selected item index updated: ${lazyListState.selectedItemIndex}")
+            games[lazyListState.selectedItemIndex % games.size]
+        }
+    }
+
+    Text("${lazyListState.selectedItemIndex % games.size + 1} / ${games.size}")
+
     //TODO: Worry about centering the first item later.
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -45,4 +50,7 @@ fun GameWheel(
             CarouselImage(game.imageId, game.gameTitle, game.contentDescription)
         }
     }
+
+    Text(currentGame.gameTitle)
+    Text(currentGame.gameDescription)
 }

@@ -30,6 +30,14 @@ fun NerdGuesserScaffold(
     title: String,
     hostState: SnackbarHostState = remember { SnackbarHostState() },
     onBackClick: () -> Unit, /*Only for testing*/
+    navigationIcon: @Composable () -> Unit = {
+        IconButton(onClick = {onBackClick()}) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                contentDescription = stringResource(R.string.back_arrow)
+            )
+        }
+    },
     actionIconButton: @Composable RowScope.() -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ){
@@ -53,14 +61,7 @@ fun NerdGuesserScaffold(
                 //TODO: Fix number thing
                 title = { Text(title) },
                 //TODO: Figure out best way (For this project) to pass iconbutton data to NerdGuesserScaffold. (i.e. IconButton, Icon and onClick, imageVector and onClick)
-                navigationIcon = {
-                    IconButton(onClick = {onBackClick()}) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = stringResource(R.string.back_arrow)
-                        )
-                    }
-                },
+                navigationIcon = navigationIcon,
                 actions = actionIconButton
                 /*actions = {
                     //TODO: Make this a parameter so each screen can have its own icon

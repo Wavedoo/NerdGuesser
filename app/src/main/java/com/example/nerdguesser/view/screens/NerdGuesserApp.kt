@@ -4,11 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.nerdguesser.ui.theme.NerdGuesserTheme
-import com.example.nerdguesser.view.navigation.AnimeGuesserListRoute
+import com.example.nerdguesser.view.navigation.ScreenRoute
 import com.example.nerdguesser.view.navigation.animeGuesserGame
-import com.example.nerdguesser.view.navigation.SignInRoute
-import com.example.nerdguesser.view.navigation.SignUpRoute
-import com.example.nerdguesser.view.navigation.UserInfoTestRoute
 import com.example.nerdguesser.view.navigation.animeGuesserList
 import com.example.nerdguesser.view.navigation.homeScreen
 import com.example.nerdguesser.view.navigation.navigateToGame
@@ -30,7 +27,7 @@ fun NerdGuesserApp(){
         //GuessAnimeScreen("test")
         //LoadingScaffold()
         //TestScreen()
-        NavHost(navController, startDestination = SignInRoute){
+        NavHost(navController, startDestination = ScreenRoute.SignInRoute){
             signIn(
                 navigateToHome = { navController.navigateToHome() },
                 navigateToSignUp = {navController.navigateToSignUp()}
@@ -49,7 +46,8 @@ fun NerdGuesserApp(){
             animeGuesserGame()
             homeScreen(
                 onNavigateToList = { navController.navigateToList() },
-                onNavigateToSettings = {navController.navigateToSettings()}
+                onNavigateToSettings = { navController.navigateToSettings() },
+                navController = navController
             )
             settingsScreen(
                 onSignOut = {navController.navigateToSignIn()}

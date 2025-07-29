@@ -17,13 +17,15 @@ import com.example.nerdguesser.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.nerdguesser.utils.extensions.getCurrentSelectedItem
 import com.example.nerdguesser.utils.extensions.selectedItemIndex
+import com.example.nerdguesser.view.navigation.ScreenRoute
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CarouselGames(){
+fun CarouselGames(navController: NavController){
     val games = listOf(
         CarouselItem(
             1,
@@ -31,12 +33,16 @@ fun CarouselGames(){
             "Guess The Anime",
             "Guess the daily anime or play previous games!",
             contentDescription = "Anime characters I guess",
+            playRoute = ScreenRoute.AnimeGuesserListRoute,
+            previousRoute = ScreenRoute.AnimeGuesserListRoute,
         ),
         CarouselItem(2,
             R.drawable.frieren_landscape_6,
             "Frieren Frenzy",
             "Play this daily Frieren related quiz?",
             contentDescription = "Frieren",
+            playRoute = ScreenRoute.UserInfoTestRoute,
+            hasDaily = false,
         ),
         CarouselItem(
             3,
@@ -44,6 +50,8 @@ fun CarouselGames(){
             "Anime the Guess",
             "Anime the daily guess or play previous games!",
             contentDescription = "Anime characters I guess again",
+            playRoute = ScreenRoute.SettingsRoute,
+            hasDaily = false,
         ),
         CarouselItem(
             4,
@@ -51,11 +59,14 @@ fun CarouselGames(){
             "",
             "",
             contentDescription = "",
+            playRoute = ScreenRoute.HomeRoute,
+            hasDaily = false,
         )
     )
 
 
     GameWheel(
+        navController = navController,
         games = games
     )
 }

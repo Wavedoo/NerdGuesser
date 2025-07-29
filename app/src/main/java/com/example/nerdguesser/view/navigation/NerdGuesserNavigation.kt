@@ -17,25 +17,30 @@ import com.example.nerdguesser.view.screens.UserInfoTestScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
-object SignInRoute
+sealed class ScreenRoute{
+    @Serializable
+    object SignInRoute: ScreenRoute()
 
-@Serializable
-object SignUpRoute
+    @Serializable
+    object SignUpRoute: ScreenRoute()
 
-@Serializable
-object UserInfoTestRoute
+    @Serializable
+    object UserInfoTestRoute: ScreenRoute()
 
-@Serializable
-object AnimeGuesserListRoute
+    @Serializable
+    object AnimeGuesserListRoute: ScreenRoute()
 
-@Serializable
-data class AnimeGuesserGameRoute(val id: String)
+    @Serializable
+    data class AnimeGuesserGameRoute(val id: String): ScreenRoute()
 
-@Serializable
-object HomeRoute
+    @Serializable
+    object HomeRoute: ScreenRoute()
 
-@Serializable
-object SettingsRoute
+    @Serializable
+    object SettingsRoute: ScreenRoute()
+}
+
+
 
 //I probably don't need this file, but it's fineeeee
 //Forgive the informal late night comments. It's just a fun little project anyway.
@@ -47,7 +52,7 @@ fun NavGraphBuilder.signIn(
     navigateToHome: () -> Unit,
     navigateToSignUp: () -> Unit,
 ){
-    composable<SignInRoute> {
+    composable<ScreenRoute.SignInRoute> {
         SignInScreen(
             navigateToHome = navigateToHome,
             navigateToSignUp = navigateToSignUp
@@ -59,7 +64,7 @@ fun NavGraphBuilder.signUp(
     navigateToSignIn: () -> Unit,
     navigateToUserInfo: () -> Unit
 ){
-    composable<SignUpRoute> {
+    composable<ScreenRoute.SignUpRoute> {
         SignUpScreen(navigateToSignIn = navigateToSignIn, navigateToHome = navigateToUserInfo)
     }
 }
@@ -68,30 +73,32 @@ fun NavGraphBuilder.userInfoTest(
     onSignOut: () -> Unit,
     onNavigateToList: () -> Unit
 ){
-    composable<UserInfoTestRoute> {
+    composable<ScreenRoute.UserInfoTestRoute> {
         UserInfoTestScreen(onSignOut = onSignOut, navigateToGames = onNavigateToList)
     }
 }
 fun NavGraphBuilder.animeGuesserList(onNavigateToGame: (String) -> Unit = {}){
-    composable<AnimeGuesserListRoute> {
+    composable<ScreenRoute.AnimeGuesserListRoute> {
         AnimeListScreen(onCardClick = onNavigateToGame)
     }
 }
 
 fun NavGraphBuilder.animeGuesserGame(){
-    composable<AnimeGuesserGameRoute> { backStackEntry ->
-        val animeGuesserGame: AnimeGuesserGameRoute = backStackEntry.toRoute()
+    composable<ScreenRoute.AnimeGuesserGameRoute> { backStackEntry ->
+        val animeGuesserGame: ScreenRoute.AnimeGuesserGameRoute = backStackEntry.toRoute()
         Log.d("Anime", "animeGuesserGame: ${animeGuesserGame.id}")
         GuessAnimeScreen(id = animeGuesserGame.id)
     }
 }
 
 fun NavGraphBuilder.homeScreen(
+    navController: NavController,
     onNavigateToList: () -> Unit,
     onNavigateToSettings: () -> Unit
 ){
-    composable<HomeRoute> {
+    composable<ScreenRoute.HomeRoute> {
         HomeScreen(
+            navController = navController,
             navigateToGames = onNavigateToList,
             navigateToSettings = onNavigateToSettings,
         )
@@ -101,7 +108,7 @@ fun NavGraphBuilder.homeScreen(
 fun NavGraphBuilder.settingsScreen(
     onSignOut: () -> Unit
 ){
-    composable<SettingsRoute> {
+    composable<ScreenRoute.SettingsRoute> {
         SettingsScreen(
             onSignOut = onSignOut
         )
@@ -117,17 +124,17 @@ fun NavGraphBuilder.nerdGuesserNavGraph(onGameSelected: (String) -> Unit = {}){
 
 //Assumes I'm navigating to sign in should not have something before it in the backstack
 fun NavController.navigateToSignIn(){
-    navigate(SignInRoute, navOptions = navOptions { popUpTo(0) })
+    navigate(ScreenRoute.SignInRoute, navOptions = navOptions { popUpTo(0) })
 }
 
 //Assumes I'm navigating from SignIn so it's the only other thing in the stack.
 fun NavController.navigateToSignUp(){
-    navigate(SignUpRoute){ launchSingleTop = true}
+    navigate(ScreenRoute.SignUpRoute){ launchSingleTop = true}
 }
 
 fun NavController.navigateToUserInfo(){
     navigate(
-        route = UserInfoTestRoute,
+        route = ScreenRoute.UserInfoTestRoute,
         navOptions = navOptions {
             popUpTo(0)
         }
@@ -136,7 +143,7 @@ fun NavController.navigateToUserInfo(){
 
 fun NavController.navigateToList(){
     navigate(
-        route = AnimeGuesserListRoute,
+        route = ScreenRoute.AnimeGuesserListRoute,
         /*navOptions = navOptions {
             popUpTo(0)
         }*/
@@ -146,13 +153,13 @@ fun NavController.navigateToGame(id: String){
     //dataTest.id = id
     Log.d("Anime", "navigateToGame is $id\n" +
             "Called form ...")
-    navigate(AnimeGuesserGameRoute(id = id)){ launchSingleTop = true}
+    navigate(ScreenRoute.AnimeGuesserGameRoute(id = id)){ launchSingleTop = true}
 }
 
 fun NavController.navigateToHome(){
-    navigate(route = HomeRoute) { launchSingleTop = true}
+    navigate(route = ScreenRoute.HomeRoute) { launchSingleTop = true}
 }
 
 fun NavController.navigateToSettings(){
-    navigate(route = SettingsRoute) { launchSingleTop = true}
+    navigate(route = ScreenRoute.SettingsRoute) { launchSingleTop = true}
 }

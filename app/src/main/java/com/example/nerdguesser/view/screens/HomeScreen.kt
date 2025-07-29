@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.nerdguesser.view.components.CarouselGames
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
 import com.example.nerdguesser.view.components.buttons.GenericButton
@@ -23,6 +24,7 @@ import com.example.nerdguesser.viewmodel.HomeViewModel
 //Settings button is here in actions
 @Composable
 fun HomeScreen(
+    navController: NavController,
     navigateToGames: () -> Unit,
     navigateToSettings: () -> Unit,
 ){
@@ -30,6 +32,7 @@ fun HomeScreen(
     NerdGuesserScaffold(
         title = "Nerd Guesser",
         onBackClick = {},
+        navigationIcon = {},
         actionIconButton = {
             IconButton(onClick = navigateToSettings) {
                 Icon(
@@ -44,7 +47,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            CarouselGames()
+            CarouselGames(navController = navController)
             Text("Stats go here.")
         }
     }

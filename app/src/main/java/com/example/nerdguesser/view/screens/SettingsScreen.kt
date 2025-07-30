@@ -1,5 +1,6 @@
 package com.example.nerdguesser.view.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,12 +19,13 @@ import com.example.nerdguesser.viewmodel.SettingsViewModel
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    onSignOut: () -> Unit,
+    /*onSignOut: () -> Unit,*/
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
     val signedIn by settingsViewModel.signedIn.collectAsStateWithLifecycle()
     if(!signedIn){
-        onSignOut()
+        //Figure something out later.
+        Log.d("Anime", "User is not signed in.")
     }
     NerdGuesserScaffold(
         title = "Settings",

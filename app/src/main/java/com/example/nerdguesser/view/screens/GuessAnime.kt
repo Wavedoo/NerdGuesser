@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.nerdguesser.R
 import com.example.nerdguesser.model.classes.GameData
 import com.example.nerdguesser.ui.theme.NerdGuesserTheme
@@ -46,7 +47,10 @@ private const val s = "Help button"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltViewModel()){
+fun GuessAnimeScreen(
+    navController: NavController,
+    id: String,
+    gameViewModel: GuessingGameViewModel = hiltViewModel()){
     LaunchedEffect(true) {
         gameViewModel.tempInit(id)
     }
@@ -61,7 +65,7 @@ fun GuessAnimeScreen(id: String, gameViewModel: GuessingGameViewModel = hiltView
     val title = if (gameUiState.gameData.day != 0) stringResource(R.string.anime_number, gameUiState.gameData.day) else "Anime Guesser"
     NerdGuesserScaffold(
         title = title,
-        onBackClick = {/* gameViewModel.getAnswerDetails()*/ },
+        onBackClick = {navController.popBackStack()},
         actionIconButton = {
             IconButton(onClick = {/*TODO: Add a help modal*/}) {
                 Icon(

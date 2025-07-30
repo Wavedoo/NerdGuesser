@@ -35,8 +35,8 @@ class SignUpViewModel @Inject constructor(
         email: String,
         password: String,
         confirmPassword: String,
-        onSignUpSuccessful: () -> Unit,
-        showToast: (String) -> Unit
+/*        onSignUpSuccessful: () -> Unit,
+        showToast: (String) -> Unit*/
     ){
         resetErrors()
         var valid = true

@@ -24,9 +24,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.nerdguesser.R
 import com.example.nerdguesser.view.components.LoadingIndicator
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
+import com.example.nerdguesser.view.navigation.ScreenRoute
 import com.example.nerdguesser.viewmodel.AnimeListViewModel
 
 //Hex is ARGB values
@@ -39,7 +41,11 @@ enum class Status(val rgb: Long){
 }
 
 @Composable
-fun AnimeListScreen(onCardClick: (String) -> Unit = {}, animeListViewModel: AnimeListViewModel = hiltViewModel()){
+fun AnimeListScreen(
+    navController: NavController,
+    /*onCardClick: (String) -> Unit = {}, */
+    animeListViewModel: AnimeListViewModel = hiltViewModel()
+){
     val gamesList by animeListViewModel.gamesList.collectAsStateWithLifecycle()
     Log.d("Anime", "AnimeListScreen called")
 
@@ -50,7 +56,9 @@ fun AnimeListScreen(onCardClick: (String) -> Unit = {}, animeListViewModel: Anim
         if(gamesList.isEmpty()){
             LoadingIndicator(innerPadding)
         }else{
-            AnimeListScreenContent(innerPadding, gamesList, onCardClick)
+            AnimeListScreenContent(innerPadding, gamesList){
+                navController.navigate(ScreenRoute.AnimeGuesserGameRoute(id = it))
+            }
         }
     }
 
@@ -103,5 +111,5 @@ fun GameCard(
 @Preview
 @Composable
 private fun AnimeListScreenPreview(){
-    AnimeListScreen()
+    //AnimeListScreen()
 }

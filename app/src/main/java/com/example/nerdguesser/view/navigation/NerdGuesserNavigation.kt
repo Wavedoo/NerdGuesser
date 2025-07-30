@@ -49,45 +49,52 @@ sealed class ScreenRoute{
 
 
 fun NavGraphBuilder.signIn(
+    navController: NavController,
     navigateToHome: () -> Unit,
     navigateToSignUp: () -> Unit,
 ){
     composable<ScreenRoute.SignInRoute> {
         SignInScreen(
-            navigateToHome = navigateToHome,
-            navigateToSignUp = navigateToSignUp
+            navController
         )
     }
 }
 
 fun NavGraphBuilder.signUp(
+    navController: NavController,
     navigateToSignIn: () -> Unit,
     navigateToUserInfo: () -> Unit
 ){
     composable<ScreenRoute.SignUpRoute> {
-        SignUpScreen(navigateToSignIn = navigateToSignIn, navigateToHome = navigateToUserInfo)
+        SignUpScreen(navController)
     }
 }
 
 fun NavGraphBuilder.userInfoTest(
+    navController: NavController,
     onSignOut: () -> Unit,
     onNavigateToList: () -> Unit
 ){
     composable<ScreenRoute.UserInfoTestRoute> {
-        UserInfoTestScreen(onSignOut = onSignOut, navigateToGames = onNavigateToList)
+        UserInfoTestScreen(navController)
     }
 }
-fun NavGraphBuilder.animeGuesserList(onNavigateToGame: (String) -> Unit = {}){
+fun NavGraphBuilder.animeGuesserList(
+    navController: NavController,
+    onNavigateToGame: (String) -> Unit = {}
+){
     composable<ScreenRoute.AnimeGuesserListRoute> {
-        AnimeListScreen(onCardClick = onNavigateToGame)
+        AnimeListScreen(navController)
     }
 }
 
-fun NavGraphBuilder.animeGuesserGame(){
+fun NavGraphBuilder.animeGuesserGame(
+    navController: NavController,
+){
     composable<ScreenRoute.AnimeGuesserGameRoute> { backStackEntry ->
         val animeGuesserGame: ScreenRoute.AnimeGuesserGameRoute = backStackEntry.toRoute()
         Log.d("Anime", "animeGuesserGame: ${animeGuesserGame.id}")
-        GuessAnimeScreen(id = animeGuesserGame.id)
+        GuessAnimeScreen(navController = navController, id = animeGuesserGame.id)
     }
 }
 
@@ -106,20 +113,19 @@ fun NavGraphBuilder.homeScreen(
 }
 
 fun NavGraphBuilder.settingsScreen(
+    navController: NavController,
     onSignOut: () -> Unit
 ){
     composable<ScreenRoute.SettingsRoute> {
-        SettingsScreen(
-            onSignOut = onSignOut
-        )
+        SettingsScreen(navController)
     }
 }
 
 //Extracted like this, because I'd prefer navGraphBuilder not looking messy in NavHost Lambda
 //Unextracted (or is it tracted) cause I don't want to have to pass a function into this then into AnimeGuesserList
 fun NavGraphBuilder.nerdGuesserNavGraph(onGameSelected: (String) -> Unit = {}){
-    animeGuesserList(onNavigateToGame = onGameSelected)
-    animeGuesserGame()
+    /*animeGuesserList(onNavigateToGame = onGameSelected)
+    animeGuesserGame()*/
 }
 
 //Assumes I'm navigating to sign in should not have something before it in the backstack
@@ -157,7 +163,12 @@ fun NavController.navigateToGame(id: String){
 }
 
 fun NavController.navigateToHome(){
-    navigate(route = ScreenRoute.HomeRoute) { launchSingleTop = true}
+    navigate(
+        route = ScreenRoute.HomeRoute,
+        navOptions = navOptions {
+            popUpTo(0)
+        }
+    )
 }
 
 fun NavController.navigateToSettings(){

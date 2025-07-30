@@ -29,27 +29,32 @@ fun NerdGuesserApp(){
         //TestScreen()
         NavHost(navController, startDestination = ScreenRoute.SignInRoute){
             signIn(
+                navController = navController,
                 navigateToHome = { navController.navigateToHome() },
                 navigateToSignUp = {navController.navigateToSignUp()}
             )
             signUp(
+                navController = navController,
                 navigateToSignIn = {navController.navigateToSignIn()},
                 navigateToUserInfo = {navController.navigateToUserInfo()}
             )
             userInfoTest(
+                navController = navController,
                 onSignOut = { navController.navigateToSignIn() },
                 onNavigateToList = {navController.navigateToList()}
             )
-            animeGuesserList(onNavigateToGame = {
-                navController.navigateToGame(it)
-            })
-            animeGuesserGame()
+            animeGuesserList(
+                navController = navController,
+                onNavigateToGame = { navController.navigateToGame(it) }
+            )
+            animeGuesserGame(navController = navController)
             homeScreen(
+                navController = navController,
                 onNavigateToList = { navController.navigateToList() },
                 onNavigateToSettings = { navController.navigateToSettings() },
-                navController = navController
             )
             settingsScreen(
+                navController = navController,
                 onSignOut = {navController.navigateToSignIn()}
             )
             //nerdGuesserNavGraph(onGameSelected = {navController.navigateToGameTest("test")})

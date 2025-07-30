@@ -21,10 +21,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.nerdguesser.view.components.EmailOutlinedTextField
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
 import com.example.nerdguesser.view.components.PasswordOutlinedTextField
 import com.example.nerdguesser.view.components.buttons.GenericButton
+import com.example.nerdguesser.view.navigation.ScreenRoute
+import com.example.nerdguesser.view.navigation.navigateToHome
+import com.example.nerdguesser.view.navigation.navigateToSignIn
 import com.example.nerdguesser.viewmodel.SignInViewModel
 import com.example.nerdguesser.viewmodel.SignUpViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,8 +37,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
 fun SignUpScreen(
-    navigateToSignIn: () -> Unit,
-    navigateToHome: () -> Unit,
+    navController: NavController,
     signUpViewModel: SignUpViewModel = hiltViewModel()
 ){
     var email by rememberSaveable { mutableStateOf("test@test.com") }
@@ -47,7 +50,7 @@ fun SignUpScreen(
 
     if(signedIn){
         Log.d("Anime", "Currently signed in. Navigating.")
-        navigateToHome()
+        navController.navigateToHome()
     }
     NerdGuesserScaffold(
         title = "Nerd Guesser",
@@ -89,13 +92,11 @@ fun SignUpScreen(
             GenericButton(
                 text = "Sign up",
                 onClick = {
-                    signUpViewModel.signUp(email, password, confirmPassword, navigateToHome) {
-                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                    }
+                    signUpViewModel.signUp(email, password, confirmPassword)
                 }
             )
             TextButton(
-                onClick = navigateToSignIn
+                onClick = { navController.navigate(ScreenRoute.SignInRoute) }
             ) {
                 Text("Already have an account?\nClick here to log in!", textAlign = TextAlign.Center)
             }

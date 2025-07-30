@@ -20,10 +20,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.nerdguesser.view.components.EmailOutlinedTextField
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
 import com.example.nerdguesser.view.components.PasswordOutlinedTextField
 import com.example.nerdguesser.view.components.buttons.GenericButton
+import com.example.nerdguesser.view.navigation.ScreenRoute
+import com.example.nerdguesser.view.navigation.navigateToHome
 import com.example.nerdguesser.viewmodel.SignInViewModel
 
 //TODO: Loading indicator
@@ -31,8 +34,7 @@ import com.example.nerdguesser.viewmodel.SignInViewModel
 @Composable
 fun SignInScreen(
     //TODO: Figure out what home is
-    navigateToHome: () -> Unit,
-    navigateToSignUp: () -> Unit,
+    navController: NavController,
     signInViewModel: SignInViewModel = hiltViewModel()
 ){
     var email by rememberSaveable { mutableStateOf("") }
@@ -41,7 +43,7 @@ fun SignInScreen(
     val signInUiState by signInViewModel.uiState.collectAsStateWithLifecycle()
     val signedIn by signInViewModel.signedIn.collectAsStateWithLifecycle()
     if(signedIn){
-        navigateToHome()
+        navController.navigateToHome()
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -84,11 +86,13 @@ fun SignInScreen(
             GenericButton(
                 text = "Sign in",
                 onClick = {
-                    signInViewModel.signIn(email, password, navigateToHome)
+                    signInViewModel.signIn(email, password){
+                        navController.navigateToHome()
+                    }
                 }
             )
             TextButton(
-                onClick = navigateToSignUp
+                onClick = { navController.navigate(ScreenRoute.SignUpRoute) }
             ) {
                 Text("Don't have an account?\nClick here to sign up!", textAlign = TextAlign.Center)
             }

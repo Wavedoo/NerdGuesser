@@ -11,27 +11,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
 import com.example.nerdguesser.view.components.buttons.GenericButton
+import com.example.nerdguesser.view.navigation.ScreenRoute
 import com.example.nerdguesser.viewmodel.UserInfoTestViewModel
 
 @Composable
 fun UserInfoTestScreen(
-    onSignOut: () -> Unit,
-    navigateToGames: () -> Unit,
+    /*onSignOut: () -> Unit,
+    navigateToGames: () -> Unit,*/
+    navController: NavController,
     userInfoTestViewModel: UserInfoTestViewModel = hiltViewModel()
 ){
     val user = userInfoTestViewModel.getUser()
     if(user == null){
-        onSignOut()
+        navController.navigate(ScreenRoute.HomeRoute)
     }
     user!!
     NerdGuesserScaffold(
         title = "User Info",
-        onBackClick = onSignOut
+        onBackClick = { navController.popBackStack() }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -47,12 +52,8 @@ fun UserInfoTestScreen(
                 text = "Sign Out",
                 onClick = {
                     userInfoTestViewModel.signOut()
-                    onSignOut()
+                    navController.navigate(ScreenRoute.HomeRoute)
                 }
-            )
-            GenericButton(
-                text = "Games",
-                onClick = navigateToGames
             )
         }
     }

@@ -11,11 +11,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
 import com.example.nerdguesser.viewmodel.SettingsViewModel
 
 @Composable
 fun SettingsScreen(
+    navController: NavController,
     onSignOut: () -> Unit,
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
@@ -25,7 +27,7 @@ fun SettingsScreen(
     }
     NerdGuesserScaffold(
         title = "Settings",
-        onBackClick = { }
+        onBackClick = { navController.popBackStack()}
     ) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding),) {
             TextButton({}) {

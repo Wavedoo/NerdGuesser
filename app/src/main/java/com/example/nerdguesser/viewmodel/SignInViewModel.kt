@@ -66,7 +66,7 @@ class SignInViewModel @Inject constructor(
             it.copy(isLoading = isLoading)
         }
     }
-    fun isSignedIn(): Boolean{
+    private fun isSignedIn(): Boolean{
         return authRepository.currentUser != null
     }
 

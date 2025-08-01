@@ -7,15 +7,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun GenericButton(text: String, onClick: () -> Unit){
+fun GenericButton(
+    modifier:Modifier = Modifier,
+    text: String,
+    onClick: () -> Unit,
+    height: Dp = 40.dp,
+    width: Dp = 140.dp
+){
+    val buttonModifier = if(modifier == Modifier){
+        Modifier.height(height).width(width)
+    }else{
+        modifier
+    }
+
     Button(
         onClick = onClick,
-        modifier = Modifier.height(40.dp).width(140.dp),
+        modifier = buttonModifier,
         shape = MaterialTheme.shapes.small
     ) {
+
         Text(text)
     }
 }

@@ -14,6 +14,7 @@ import com.example.nerdguesser.view.screens.SettingsScreen
 import com.example.nerdguesser.view.screens.SignInScreen
 import com.example.nerdguesser.view.screens.SignUpScreen
 import com.example.nerdguesser.view.screens.UserInfoTestScreen
+import com.example.nerdguesser.view.screens.WelcomeScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -38,6 +39,9 @@ sealed class ScreenRoute{
 
     @Serializable
     object SettingsRoute: ScreenRoute()
+
+    @Serializable
+    object  WelcomeRoute: ScreenRoute()
 }
 
 
@@ -121,6 +125,14 @@ fun NavGraphBuilder.settingsScreen(
     }
 }
 
+fun NavGraphBuilder.welcomeScreen(
+    navController: NavController
+){
+    composable<ScreenRoute.WelcomeRoute> {
+        WelcomeScreen(navController)
+    }
+}
+
 //Extracted like this, because I'd prefer navGraphBuilder not looking messy in NavHost Lambda
 //Unextracted (or is it tracted) cause I don't want to have to pass a function into this then into AnimeGuesserList
 fun NavGraphBuilder.nerdGuesserNavGraph(onGameSelected: (String) -> Unit = {}){
@@ -173,4 +185,13 @@ fun NavController.navigateToHome(){
 
 fun NavController.navigateToSettings(){
     navigate(route = ScreenRoute.SettingsRoute) { launchSingleTop = true}
+}
+
+fun NavController.signOutNavigation(){
+    navigate(
+        route = ScreenRoute.SignInRoute,
+        navOptions = navOptions {
+            popUpTo(0)
+        }
+    )
 }

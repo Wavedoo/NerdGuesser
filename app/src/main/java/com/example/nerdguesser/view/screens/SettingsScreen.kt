@@ -14,6 +14,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
+import com.example.nerdguesser.view.navigation.ScreenRoute
+import com.example.nerdguesser.view.navigation.signOutNavigation
 import com.example.nerdguesser.viewmodel.SettingsViewModel
 
 @Composable
@@ -25,6 +27,7 @@ fun SettingsScreen(
     val signedIn by settingsViewModel.signedIn.collectAsStateWithLifecycle()
     if(!signedIn){
         //Figure something out later.
+        navController.signOutNavigation()
         Log.d("Anime", "User is not signed in.")
     }
     NerdGuesserScaffold(

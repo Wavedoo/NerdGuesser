@@ -24,4 +24,8 @@ class AuthRepository @Inject constructor(
     fun getUser(): FirebaseUser? {
         return authDataSource.getUser()
     }
+
+    suspend fun createGuestAccount(){
+        authDataSource.signInAnonymously()
+    }
 }

@@ -19,6 +19,7 @@ import com.example.nerdguesser.view.navigation.settingsScreen
 import com.example.nerdguesser.view.navigation.signIn
 import com.example.nerdguesser.view.navigation.signUp
 import com.example.nerdguesser.view.navigation.userInfoTest
+import com.example.nerdguesser.view.navigation.welcomeScreen
 
 @Composable
 fun NerdGuesserApp(){
@@ -27,7 +28,7 @@ fun NerdGuesserApp(){
         //GuessAnimeScreen("test")
         //LoadingScaffold()
         //TestScreen()
-        NavHost(navController, startDestination = ScreenRoute.SignInRoute){
+        NavHost(navController, startDestination = ScreenRoute.WelcomeRoute){
             signIn(
                 navController = navController,
                 navigateToHome = { navController.navigateToHome() },
@@ -57,6 +58,7 @@ fun NerdGuesserApp(){
                 navController = navController,
                 onSignOut = {navController.navigateToSignIn()}
             )
+            welcomeScreen(navController = navController)
             //nerdGuesserNavGraph(onGameSelected = {navController.navigateToGameTest("test")})
         }
     }

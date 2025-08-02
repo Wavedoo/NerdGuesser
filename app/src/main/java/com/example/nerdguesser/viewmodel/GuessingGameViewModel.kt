@@ -78,14 +78,19 @@ class GuessingGameViewModel @Inject constructor(
         }
     }
 
-    fun loadGameData(day: Int){
+    fun loadGameData(day: Int?){
         Log.d("Anime", "Loading game data for Anime Guesser")
         viewModelScope.launch {
-            gameData = gameDataRepository.getGameData(day)
+            gameData = if(day != null){
+                gameDataRepository.getGameData(day)
+            }else{
+                gameDataRepository.getLatestGameData()
+            }
             options = animeInformationRepository.getAnimeList()
             createState()
         }
     }
+
     private suspend fun createState(){
         correctAnswer = gameData.name
         images = imageDataRepository.getImages(gameData.folderName).toMutableStateList()

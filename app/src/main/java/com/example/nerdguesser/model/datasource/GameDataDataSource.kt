@@ -7,6 +7,7 @@ import com.example.nerdguesser.model.classes.GameData
 import com.example.nerdguesser.model.utils.GameDataUtil
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -43,11 +44,26 @@ class GameDataDataSource @Inject constructor(
     }
 
     suspend fun getGameData(day: Int): GameData {
-        val query = gameCollectionRef.whereEqualTo("day", day).whereEqualTo("enabled", true)
+        val query = gameCollectionRef.whereEqualTo("day", day).whereEqualTo("enabled", true).limit(1)
         val docs = query.get().await()
         if(docs.documents.size < 1){
             throw InvalidDayException()
         }
+        val gameData = docs.documents[0].toObject<GameData>()
+        if(gameData?.isValidData() != true){
+            throw GameDataMissingException()
+        }
+        return gameData
+    }
+
+    suspend fun getLatestGameData(): GameData{
+        val query = gameCollectionRef.whereEqualTo("enabled", true).orderBy("day", Query.Direction.DESCENDING).limit(1)
+        val docs = query.get().await()
+        if(docs.documents.size < 1){
+            //Should never be thrown if this works the way I think it does.
+            throw InvalidDayException()
+        }
+
         val gameData = docs.documents[0].toObject<GameData>()
         if(gameData?.isValidData() != true){
             throw GameDataMissingException()

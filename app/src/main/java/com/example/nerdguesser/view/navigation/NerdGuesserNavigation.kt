@@ -32,7 +32,7 @@ sealed class ScreenRoute{
     object AnimeGuesserListRoute: ScreenRoute()
 
     @Serializable
-    data class AnimeGuesserGameRoute(/*val id: String*/ val day: Int): ScreenRoute()
+    data class AnimeGuesserGameRoute(/*val id: String*/ val day: Int? = null): ScreenRoute()
 
     @Serializable
     object HomeRoute: ScreenRoute()

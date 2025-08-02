@@ -33,10 +33,10 @@ fun CarouselGames(navController: NavController){
             "Guess The Anime",
             "Guess the daily anime or play previous games!",
             contentDescription = "Anime characters I guess",
-            playRoute = ScreenRoute.AnimeGuesserListRoute,
+            playRoute = ScreenRoute.AnimeGuesserGameRoute(),
             previousRoute = ScreenRoute.AnimeGuesserListRoute,
         ),
-        CarouselItem(2,
+        /*CarouselItem(2,
             R.drawable.frieren_landscape_6,
             "Frieren Frenzy",
             "Play this daily Frieren related quiz?",
@@ -61,7 +61,7 @@ fun CarouselGames(navController: NavController){
             contentDescription = "",
             playRoute = ScreenRoute.HomeRoute,
             hasDaily = false,
-        )
+        )*/
     )
 
 

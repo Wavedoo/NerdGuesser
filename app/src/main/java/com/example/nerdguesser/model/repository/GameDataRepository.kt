@@ -21,6 +21,10 @@ class GameDataRepository @Inject constructor(
     suspend fun getGameData(day: Int): GameData{
         return gameDataDataSource.getGameData(day)
     }
+
+    suspend fun getLatestGameData(): GameData{
+        return  gameDataDataSource.getLatestGameData()
+    }
     //-1 represents failed guesses
     fun updateGameGuesses(id: String, guesses: Int){
         gameDataDataSource.updateGameGuesses(id = id, guesses = guesses)

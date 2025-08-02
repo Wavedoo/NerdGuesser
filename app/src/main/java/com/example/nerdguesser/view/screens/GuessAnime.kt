@@ -41,7 +41,7 @@ private const val s = "Help button"
 @Composable
 fun GuessAnimeScreen(
     navController: NavController,
-    day: Int,
+    day: Int?,
     /*id: String,*/
     gameViewModel: GuessingGameViewModel = hiltViewModel()
 ){

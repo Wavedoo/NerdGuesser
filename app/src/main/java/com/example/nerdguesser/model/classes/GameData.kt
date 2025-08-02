@@ -47,4 +47,11 @@ data class GameData(
             "\thints = $hints\n" +
             "\timagesFolder = $folderName"
 
+    //Only checks for important data for playing
+    fun isValidData(): Boolean{
+        return name != "" &&
+                day != -1 &&
+                folderName != ""
+    }
+
 }

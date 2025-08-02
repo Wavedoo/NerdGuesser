@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoadingIndicator(padding: PaddingValues) {
+fun ProgressIndicator(padding: PaddingValues) {
     Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center){
         CircularProgressIndicator(
             modifier = Modifier.width(64.dp),

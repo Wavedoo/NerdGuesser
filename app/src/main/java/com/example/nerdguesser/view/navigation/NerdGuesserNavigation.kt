@@ -32,7 +32,7 @@ sealed class ScreenRoute{
     object AnimeGuesserListRoute: ScreenRoute()
 
     @Serializable
-    data class AnimeGuesserGameRoute(val id: String): ScreenRoute()
+    data class AnimeGuesserGameRoute(/*val id: String*/ val day: Int): ScreenRoute()
 
     @Serializable
     object HomeRoute: ScreenRoute()
@@ -85,7 +85,7 @@ fun NavGraphBuilder.userInfoTest(
 }
 fun NavGraphBuilder.animeGuesserList(
     navController: NavController,
-    onNavigateToGame: (String) -> Unit = {}
+    onNavigateToGame: (Int) -> Unit = {}
 ){
     composable<ScreenRoute.AnimeGuesserListRoute> {
         AnimeListScreen(navController)
@@ -97,8 +97,11 @@ fun NavGraphBuilder.animeGuesserGame(
 ){
     composable<ScreenRoute.AnimeGuesserGameRoute> { backStackEntry ->
         val animeGuesserGame: ScreenRoute.AnimeGuesserGameRoute = backStackEntry.toRoute()
-        Log.d("Anime", "animeGuesserGame: ${animeGuesserGame.id}")
-        GuessAnimeScreen(navController = navController, id = animeGuesserGame.id)
+        Log.d("Anime", "animeGuesserGame: ${animeGuesserGame.day}")
+        GuessAnimeScreen(
+            navController = navController,
+            day = animeGuesserGame.day,
+        )
     }
 }
 
@@ -110,8 +113,6 @@ fun NavGraphBuilder.homeScreen(
     composable<ScreenRoute.HomeRoute> {
         HomeScreen(
             navController = navController,
-            navigateToGames = onNavigateToList,
-            navigateToSettings = onNavigateToSettings,
         )
     }
 }
@@ -167,11 +168,11 @@ fun NavController.navigateToList(){
         }*/
     )
 }
-fun NavController.navigateToGame(id: String){
+fun NavController.navigateToGame(day: Int){
     //dataTest.id = id
-    Log.d("Anime", "navigateToGame is $id\n" +
+    Log.d("Anime", "navigateToGame is $day\n" +
             "Called form ...")
-    navigate(ScreenRoute.AnimeGuesserGameRoute(id = id)){ launchSingleTop = true}
+    navigate(ScreenRoute.AnimeGuesserGameRoute(day)){ launchSingleTop = true}
 }
 
 fun NavController.navigateToHome(){

@@ -2,10 +2,8 @@ package com.example.nerdguesser.view.screens
 
 import android.content.Intent
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -16,31 +14,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalClipboard
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.nerdguesser.R
-import com.example.nerdguesser.model.classes.GameData
-import com.example.nerdguesser.ui.theme.NerdGuesserTheme
 import com.example.nerdguesser.view.components.FrameBar
 import com.example.nerdguesser.view.components.FrameImage
 import com.example.nerdguesser.view.components.GameOverSection
 import com.example.nerdguesser.view.components.GuessSection
 import com.example.nerdguesser.view.components.HintsSection
-import com.example.nerdguesser.view.components.LoadingIndicator
+import com.example.nerdguesser.view.components.ProgressIndicator
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
+import com.example.nerdguesser.view.components.NerdLoadingIndicator
 import com.example.nerdguesser.viewmodel.GuessingGameViewModel
 
 private const val s = "Help button"
@@ -49,10 +41,18 @@ private const val s = "Help button"
 @Composable
 fun GuessAnimeScreen(
     navController: NavController,
-    id: String,
-    gameViewModel: GuessingGameViewModel = hiltViewModel()){
-    LaunchedEffect(true) {
+    day: Int,
+    /*id: String,*/
+    gameViewModel: GuessingGameViewModel = hiltViewModel()
+){
+    /*LaunchedEffect(Unit) {
+        Log.d("Anime", "ID: $id")
         gameViewModel.tempInit(id)
+    }*/
+
+    LaunchedEffect(Unit) {
+        Log.d("Anime", "Loading data for day $day")
+        gameViewModel.loadGameData(day)
     }
 
     val gameUiState by gameViewModel.uiState.collectAsStateWithLifecycle()
@@ -78,7 +78,7 @@ fun GuessAnimeScreen(
         innerPadding ->
         //The game is ready to be played
         if(gameUiState.images.size != 6){
-            LoadingIndicator(innerPadding)
+            NerdLoadingIndicator(innerPadding)
         }else{
             //TODO: Possibly move to GuessAnimeScreenContent composable
             Column(

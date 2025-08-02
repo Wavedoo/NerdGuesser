@@ -17,6 +17,7 @@ data class GuessingGameUiState(
     val gameData: GameData = GameDataUtil.placeholder,
 
     //non-firestore
+    val isLoading: Boolean = false,
     val remainingGuesses: Int = 6,
     val hintsShown: Int = 0,
     val guesses: List<String> = listOf(),

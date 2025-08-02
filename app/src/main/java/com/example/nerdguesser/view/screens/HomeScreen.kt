@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import com.example.nerdguesser.view.components.CarouselGames
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
 import com.example.nerdguesser.view.components.buttons.GenericButton
+import com.example.nerdguesser.view.navigation.ScreenRoute
 import com.example.nerdguesser.viewmodel.HomeViewModel
 
 //TODO: Carousel with play daily and play all options
@@ -25,8 +26,6 @@ import com.example.nerdguesser.viewmodel.HomeViewModel
 @Composable
 fun HomeScreen(
     navController: NavController,
-    navigateToGames: () -> Unit,
-    navigateToSettings: () -> Unit,
 ){
     //TODO: Carousel
     NerdGuesserScaffold(
@@ -34,7 +33,7 @@ fun HomeScreen(
         onBackClick = {},
         navigationIcon = {},
         actionIconButton = {
-            IconButton(onClick = navigateToSettings) {
+            IconButton(onClick = { navController.navigate(ScreenRoute.SettingsRoute) }) {
                 Icon(
                     imageVector = Icons.Rounded.Settings,
                     contentDescription = "Settings"
@@ -43,7 +42,9 @@ fun HomeScreen(
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ){

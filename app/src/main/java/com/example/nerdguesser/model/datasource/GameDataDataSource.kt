@@ -1,6 +1,8 @@
 package com.example.nerdguesser.model.datasource
 
 import android.util.Log
+import com.example.nerdguesser.GameDataMissingException
+import com.example.nerdguesser.InvalidDayException
 import com.example.nerdguesser.model.classes.GameData
 import com.example.nerdguesser.model.utils.GameDataUtil
 import com.google.firebase.firestore.FieldValue
@@ -22,6 +24,7 @@ class GameDataDataSource @Inject constructor(
 
     }*/
 
+    val gameCollectionRef = firestore.collection("AnimeFrameGuesser")
     suspend fun getGamesList(): List<String>{
         val document = firestore.collection("AnimeInformation").document("FrameDays").get().await()
         val data = document.data!!["IDs"] as List<String>
@@ -32,10 +35,23 @@ class GameDataDataSource @Inject constructor(
     suspend fun getGameData(id: String): GameData {
         /*delay(2000)
         return GameDataUtil.test*/
-        val document = firestore.collection("AnimeFrameGuesser").document(id).get().await()
+        val document = gameCollectionRef.document(id).get().await()
         //val gameData = GameDataUtil.documentToGameData(document)
         val gameData = document.toObject<GameData>()!!
         Log.d("Anime", "Datasource: $gameData")
+        return gameData
+    }
+
+    suspend fun getGameData(day: Int): GameData {
+        val query = gameCollectionRef.whereEqualTo("day", day).whereEqualTo("enabled", true)
+        val docs = query.get().await()
+        if(docs.documents.size < 1){
+            throw InvalidDayException()
+        }
+        val gameData = docs.documents[0].toObject<GameData>()
+        if(gameData?.isValidData() != true){
+            throw GameDataMissingException()
+        }
         return gameData
     }
 

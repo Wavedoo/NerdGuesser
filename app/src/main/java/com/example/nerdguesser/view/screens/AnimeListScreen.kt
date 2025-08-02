@@ -9,12 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,8 +24,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.nerdguesser.R
-import com.example.nerdguesser.view.components.LoadingIndicator
 import com.example.nerdguesser.view.components.NerdGuesserScaffold
+import com.example.nerdguesser.view.components.NerdLoadingIndicator
 import com.example.nerdguesser.view.navigation.ScreenRoute
 import com.example.nerdguesser.viewmodel.AnimeListViewModel
 
@@ -43,21 +41,20 @@ enum class Status(val rgb: Long){
 @Composable
 fun AnimeListScreen(
     navController: NavController,
-    /*onCardClick: (String) -> Unit = {}, */
     animeListViewModel: AnimeListViewModel = hiltViewModel()
 ){
-    val gamesList by animeListViewModel.gamesList.collectAsStateWithLifecycle()
+    val games by animeListViewModel.games.collectAsStateWithLifecycle()
     Log.d("Anime", "AnimeListScreen called")
 
     NerdGuesserScaffold(
         title = stringResource(R.string.anime_guesser),
         onBackClick = {}
     ){innerPadding ->
-        if(gamesList.isEmpty()){
-            LoadingIndicator(innerPadding)
+        if(games < 0){
+            NerdLoadingIndicator(innerPadding)
         }else{
-            AnimeListScreenContent(innerPadding, gamesList){
-                navController.navigate(ScreenRoute.AnimeGuesserGameRoute(id = it))
+            AnimeListScreenContent(innerPadding, games){
+                navController.navigate(ScreenRoute.AnimeGuesserGameRoute(day = it))
             }
         }
     }
@@ -67,25 +64,24 @@ fun AnimeListScreen(
 @Composable
 fun AnimeListScreenContent(
     innerPadding: PaddingValues,
-    gamesList: List<String>,
-    onCardClick: (String) -> Unit = {}
+    gameCount: Int,
+    onCardClick: (Int) -> Unit = {}
 ){
     Log.d("Anime", "AnimeListScreenContent called")
     LazyColumn (modifier = Modifier
         .padding(innerPadding)
         .fillMaxSize()
     ){
-        itemsIndexed(gamesList){index, id ->
-            Log.d("Anime", "Day: $index, ID: $id")
-            GameCard(onCardClick, id = id, day = index + 1)
+        items(gameCount){day ->
+            Log.d("Anime", "Day: ${day+1}")
+            GameCard(onCardClick, day = day + 1)
         }
     }
 }
 
 @Composable
 fun GameCard(
-    onCardClick: (String) -> Unit = {},
-    id: String,
+    onCardClick: (Int) -> Unit = {},
     day: Int = 1,
     status: Status = Status.NotGuessed
 ){
@@ -96,8 +92,8 @@ fun GameCard(
             .padding(horizontal = 12.dp, vertical = 6.dp),
         colors = CardDefaults.cardColors(containerColor = Color(status.rgb)),
         onClick = {
-            Log.d("Anime", "From card: $id")
-            onCardClick(id)
+            Log.d("Anime", "From card: $day")
+            onCardClick(day)
         }
     ) {
         Row(modifier = Modifier

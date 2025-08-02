@@ -53,6 +53,7 @@ class GuessingGameViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(GuessingGameUiState())
     val uiState: StateFlow<GuessingGameUiState> = _uiState.asStateFlow()
 
+
     private lateinit var gameData: GameData
     private lateinit var correctAnswer: String
     private lateinit var options: List<String>
@@ -77,6 +78,14 @@ class GuessingGameViewModel @Inject constructor(
         }
     }
 
+    fun loadGameData(day: Int){
+        Log.d("Anime", "Loading game data for Anime Guesser")
+        viewModelScope.launch {
+            gameData = gameDataRepository.getGameData(day)
+            options = animeInformationRepository.getAnimeList()
+            createState()
+        }
+    }
     private suspend fun createState(){
         correctAnswer = gameData.name
         images = imageDataRepository.getImages(gameData.folderName).toMutableStateList()
